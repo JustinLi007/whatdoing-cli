@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router"
+
 interface Paramaters {
   Name: string
   Path: string
@@ -12,12 +14,14 @@ export default function Option(params: Paramaters) {
 bg-gray-800`
         }
       >
-        <a
-          href={params.Path}
+        <Link
+          to={params.Path}
           className={`inline-block content-center w-full h-full active:bg-gray-600`}
+          activeProps={{ className: `font-bold` }}
+          activeOptions={{ exact: true }}
         >
           {params.Name}
-        </a>
+        </Link>
       </div>
     </>
   );

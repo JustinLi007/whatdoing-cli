@@ -1,6 +1,18 @@
 import { useEffect } from "react";
-import Header from "./Header";
-import Menu from "./Menu";
+import { routeTree } from "./routeTree.gen";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+
+const router = createRouter({
+  routeTree: routeTree,
+  defaultPreload: "intent",
+  scrollRestoration: true,
+})
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router
+  }
+}
 
 function App() {
   function handleClick(event: MouseEvent) {
@@ -15,33 +27,9 @@ function App() {
     }
   }, [])
 
-  const menuItems: MenuItem[] = [
-    {
-      Id: "1",
-      Name: "Home",
-      Path: "/home",
-    },
-    {
-      Id: "2",
-      Name: "Start New",
-      Path: "/startnew",
-    },
-    {
-      Id: "3",
-      Name: "Settings",
-      Path: "/settings",
-    },
-  ];
 
   return (
-    <>
-      <div
-        className={``}
-      >
-        <Header Name="Whatdoing" Path="/" />
-        <Menu MenuItems={menuItems} />
-      </div>
-    </>
+    <RouterProvider router={router} ></RouterProvider>
   );
 }
 

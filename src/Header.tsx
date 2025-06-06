@@ -1,13 +1,11 @@
+import { Link } from "@tanstack/react-router"
+
 interface Parameters {
-  Name: string
-  Path: string
+  HeaderLink: MenuItem,
+  BtnOnClick: () => void,
 }
 
 export default function Header(params: Parameters) {
-  function handleClick() {
-    console.log("clicked");
-  }
-
   const btnValue = "X";
 
   return (
@@ -15,14 +13,15 @@ export default function Header(params: Parameters) {
       className={`flex flex-row flex-nowrap justify-center relative p-6`}
     >
       <span>
-        <a
-          href={params.Path}
+        <Link
+          to={params.HeaderLink.Path}
+          className={``}
         >
-          {params.Name}
-        </a>
+          {params.HeaderLink.Name}
+        </Link>
       </span>
       <button
-        onClick={handleClick}
+        onClick={params.BtnOnClick}
         className={`absolute right-4 top-3 py-4 px-6 border-1 border-gray-500 active:bg-gray-600`}
       >
         {btnValue}
