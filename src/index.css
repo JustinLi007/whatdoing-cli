@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --border-1: {
+    border: solid 1px;
+  }
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 
