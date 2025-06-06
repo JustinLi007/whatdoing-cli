@@ -1,4 +1,3 @@
-import Header from "./Header";
 import Option from "./Option";
 
 interface Paramaters {
@@ -17,13 +16,10 @@ export default function Menu(params: Paramaters) {
   });
 
   return (
-    <header>
-      <Header Name="Whatdoing" Path="/" />
-      <div
-        className={`grid grid-cols-2 landscape:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 p-2`}
-      >
-        {options}
-      </div>
-    </header>
+    <div
+      className={`grid grid-cols-2 landscape:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 p-2`}
+    >
+      {options}
+    </div>
   );
 }

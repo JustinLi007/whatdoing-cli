@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Header from "./Header";
 import Menu from "./Menu";
 
 function App() {
@@ -18,17 +19,17 @@ function App() {
     {
       Id: "1",
       Name: "Home",
-      Path: "/",
+      Path: "/home",
     },
     {
       Id: "2",
       Name: "Start New",
-      Path: "/",
+      Path: "/startnew",
     },
     {
       Id: "3",
       Name: "Settings",
-      Path: "/",
+      Path: "/settings",
     },
   ];
 
@@ -37,6 +38,7 @@ function App() {
       <div
         className={``}
       >
+        <Header Name="Whatdoing" Path="/" />
         <Menu MenuItems={menuItems} />
       </div>
     </>
