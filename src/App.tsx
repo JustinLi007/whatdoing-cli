@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { routeTree } from "./routeTree.gen";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 
@@ -15,19 +14,6 @@ declare module "@tanstack/react-router" {
 }
 
 function App() {
-  function handleClick(event: MouseEvent) {
-    console.log(event);
-  }
-
-  useEffect(() => {
-    document.addEventListener("click", handleClick)
-
-    return () => {
-      document.removeEventListener("click", handleClick)
-    }
-  }, [])
-
-
   return (
     <RouterProvider router={router} ></RouterProvider>
   );
