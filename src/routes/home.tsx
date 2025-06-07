@@ -1,53 +1,73 @@
 import { createFileRoute } from '@tanstack/react-router'
 import ButtonDropdown from '../ButtonDropdown';
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 
 export const Route = createFileRoute('/home')({
   component: Home,
 })
 
 function Home() {
-
-  const items = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
+  const sortOptions = [
+    "Desc",
+    "Asc",
+    "Recently Updated",
   ];
 
-  const [dropdownHidden, setDropdownHidden] = useState(true);
-  const [selectedSortValue, setSelectedSortValue] = useState("Sort");
+  const suggestedItems = [
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+  ];
 
-  function handleDropdownSelection(value: string) {
+  const [sortDropdownHidden, setSortDropdownHidden] = useState(true);
+  const [selectedSortValue, setSelectedSortValue] = useState("Sort");
+  const [searchValue, setSearchValue] = useState("");
+
+  function handleSortDropdownSelection(value: string) {
     setSelectedSortValue(value);
     // setDropdownHidden(!dropdownHidden);
   }
 
-  function handleDropdownToggle() {
-    setDropdownHidden(!dropdownHidden);
+  function handleSortDropdownToggle() {
+    setSortDropdownHidden(!sortDropdownHidden);
+  }
+
+  function handleSearchInputChange(event: ChangeEvent) {
+    const val = event.target.value;
+    setSearchValue(val);
   }
 
   return (
-    <div
-      className={`flex flex-row flex-nowrap gap-2`}
-    >
-      <input
-        type="text"
-        placeholder="search"
-        className={`border-gray-500 border-1 py-1 px-3`}
-      />
+    <>
       <div
-        className={`flex flex-row flex-nowrap gap-0.5 ml-auto`}
+        className={`flex flex-row flex-nowrap gap-2`}
       >
-        <ButtonDropdown
-          SelectedValue={selectedSortValue}
-          DropdownHidden={dropdownHidden}
-          Options={items}
-          OnSelect={handleDropdownSelection}
-          OnClick={handleDropdownToggle}
+        <input
+          type="text"
+          value={searchValue}
+          onChange={(e) => { handleSearchInputChange(e); }}
+          placeholder="search"
+          className={`border-gray-500 border-1 py-1 px-3 outline-0`}
         />
+        <div
+          className={`flex flex-row flex-nowrap gap-0.5 ml-auto`}
+        >
+          <ButtonDropdown
+            Name={`Sort`}
+            SelectedValue={selectedSortValue}
+            DropdownHidden={sortDropdownHidden}
+            Options={sortOptions}
+            OnSelect={handleSortDropdownSelection}
+            OnClick={handleSortDropdownToggle}
+          />
+        </div>
       </div>
-    </div>
+
+      <div>
+        shit go here
+      </div>
+    </>
   );
 }

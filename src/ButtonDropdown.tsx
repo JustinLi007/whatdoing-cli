@@ -1,6 +1,7 @@
 import Dropdown from "./Dropdown";
 
 interface Parameters {
+  Name: string
   SelectedValue: string,
   DropdownHidden: boolean,
   Options: string[],
@@ -9,16 +10,15 @@ interface Parameters {
 }
 
 export default function ButtonDropdown(params: Parameters) {
-
   return (
     <div
-      className={`inline-block`}
+      className={`inline-block relative`}
     >
       <button
         className={`border-1 border-gray-500 py-1 px-3`}
         onClick={params.OnClick}
       >
-        {params.SelectedValue}
+        {`${params.Name}: ${params.SelectedValue}`}
       </button>
       <Dropdown
         DropdownItems={params.Options}

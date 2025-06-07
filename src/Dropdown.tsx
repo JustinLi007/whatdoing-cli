@@ -9,7 +9,10 @@ export default function Dropdown(params: Parameters) {
     return (
       <div
         key={`${value}-${index}`}
-        onClick={() => { params.OnSelect(value) }}
+        onClick={() => {
+          params.OnSelect(value);
+        }}
+        className={`hover:bg-gray-500`}
       >
         {value}
       </div>
@@ -18,7 +21,7 @@ export default function Dropdown(params: Parameters) {
 
   return (
     <div
-      className={`absolute ${params.DropdownHidden ? "hidden" : ""}`}
+      className={`absolute left-0 right-0 bg-gray-700 ${params.DropdownHidden ? "hidden" : ""}`}
     >
       {items}
     </div>
