@@ -2,6 +2,7 @@ import { Outlet, createRootRoute } from "@tanstack/react-router"
 import Menu from "../Menu";
 import Header from "../Header";
 import { useState } from "react";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -29,18 +30,28 @@ function RootComponent() {
 
   return (
     <>
-      <div className={``}>
-        <Header
-          HeaderLink={{ Id: "whatdoing-header", Name: "Whatdoing", Path: "/" }}
-          BtnOnClick={handleBtnClick}
-        />
-        <div
-          className={`absolute left-0 right-0 top-auto bottom-auto`}
-        >
-          <Menu MenuItems={menuItems} MenuHidden={menuHidden} />
-        </div>
+      <div className={`flex flex-col h-dvh`}>
+        <header className={`shrink-0`}>
+          <Header
+            HeaderLink={{ Id: "whatdoing-header", Name: "Whatdoing", Path: "/" }}
+            BtnOnClick={handleBtnClick}
+          />
+          <div
+            className={`absolute left-0 right-0 top-auto bottom-auto`}
+          >
+            <Menu MenuItems={menuItems} MenuHidden={menuHidden} />
+          </div>
+        </header>
+
+        <main className={`flex-[1_1_auto] overflow-y-auto`}>
+          <Outlet />
+        </main>
+
+        <footer className={`shrink-0`}>
+          asdfasdf
+        </footer>
       </div>
-      <Outlet />
+      <TanStackRouterDevtools />
     </>
   )
 }
