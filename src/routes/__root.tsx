@@ -39,7 +39,11 @@ function RootComponent() {
           <div
             className={`absolute left-0 right-0 top-auto bottom-auto`}
           >
-            <Menu MenuItems={menuItems} MenuHidden={menuHidden} />
+            <Menu
+              MenuItems={menuItems}
+              MenuHidden={menuHidden}
+              OnClick={handleBtnClick}
+            />
           </div>
         </header>
 

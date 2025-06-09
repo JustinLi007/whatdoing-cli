@@ -21,6 +21,7 @@ export default function Header(params: Parameters) {
         </Link>
       </span>
       <button
+        type="button"
         onClick={params.BtnOnClick}
         className={`absolute right-4 top-3 py-4 px-6 border-1 border-gray-500 active:bg-gray-600`}
       >

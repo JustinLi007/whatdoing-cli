@@ -15,10 +15,11 @@ export default function ButtonDropdown(params: Parameters) {
       className={`inline-block relative`}
     >
       <button
+        type="button"
         className={`border-1 border-gray-500 py-1 px-3`}
         onClick={params.OnClick}
       >
-        {`${params.Name}: ${params.SelectedValue}`}
+        {`${params.Name}${params.SelectedValue === "" ? "" : `: ${params.SelectedValue}`}`}
       </button>
       <Dropdown
         DropdownItems={params.Options}

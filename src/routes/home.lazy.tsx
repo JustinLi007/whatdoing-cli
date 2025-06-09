@@ -51,7 +51,7 @@ const contestList: Content[] = [
 
 function Home() {
   const [sortDropdownHidden, setSortDropdownHidden] = useState(true);
-  const [selectedSortValue, setSelectedSortValue] = useState("Sort");
+  const [selectedSortValue, setSelectedSortValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
 
   function handleSortDropdownSelection(value: string) {

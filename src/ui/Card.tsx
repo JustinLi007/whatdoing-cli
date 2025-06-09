@@ -7,13 +7,18 @@ interface Parameters {
 }
 
 export default function Card(params: Parameters) {
+  let imageSrc: string | undefined = undefined;
+  if (params.ImageSrc.trim() !== "") {
+    imageSrc = params.ImageSrc;
+  }
+
   return (
     <div className={`outline-1 outline-gray-500 border-gray-500 shadow shadow-gray-500`}>
       <div className={`aspect-video w-full`}>
         <div className={` flex flex-row flex-nowrap w-full h-full`}>
           <div className={`w-2/5`}>
             <img
-              src={params.ImageSrc}
+              src={imageSrc}
               className={`object-center object-contain h-full w-full aspect-[9/16]`}
             />
           </div>
@@ -22,7 +27,7 @@ export default function Card(params: Parameters) {
               <a
                 href={params.ContentLink}
                 target="_blank"
-                className={`text-lg`}
+                className={`text-lg ${params.ContentLink.trim() === "" ? "pointer-events-none" : ""}`}
               >{params.Title}
               </a>
             </div>

@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router"
 
 interface Paramaters {
-  Name: string
-  Path: string
+  Name: string,
+  Path: string,
+  OnClick: () => void,
 }
 
 export default function Option(params: Paramaters) {
@@ -19,8 +20,8 @@ bg-gray-800`
           className={`inline-block content-center w-full h-full active:bg-gray-600`}
           activeProps={{ className: `font-bold` }}
           activeOptions={{ exact: true }}
-        >
-          {params.Name}
+          onClick={params.OnClick}
+        >{params.Name}
         </Link>
       </div>
     </>

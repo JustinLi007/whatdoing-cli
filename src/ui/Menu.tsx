@@ -3,6 +3,7 @@ import Option from "./Option";
 interface Paramaters {
   MenuItems: MenuItem[],
   MenuHidden: boolean,
+  OnClick: () => void,
 }
 
 export default function Menu(params: Paramaters) {
@@ -18,6 +19,7 @@ ${params.MenuHidden ? "hidden" : ""}`
             key={value.Id}
             Name={value.Name}
             Path={value.Path}
+            OnClick={params.OnClick}
           />
         );
       })}
