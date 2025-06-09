@@ -1,8 +1,8 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import ButtonDropdown from '../ButtonDropdown';
 import { useState, type ChangeEvent } from 'react';
-import Search from '../Search';
-import Container from '../Container';
+import Search from '../ui/Search';
+import ButtonDropdown from '../ui/ButtonDropdown';
+import Container from '../ui/Container';
 
 export const Route = createLazyFileRoute('/home')({
   component: Home,

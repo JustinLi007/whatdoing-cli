@@ -1,6 +1,6 @@
 import Card from "./Card";
-import filterSearch from "./utils/filter-search";
-import filterSort from "./utils/filter-sort";
+import filterSearch from "../utils/filter-search";
+import filterSort from "../utils/filter-sort";
 
 interface Parameters {
   Items: Content[],

@@ -1,8 +1,8 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router"
-import Menu from "../Menu";
-import Header from "../Header";
 import { useState } from "react";
+import { Outlet, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import Menu from "../ui/Menu";
+import Header from "../ui/Header";
 
 export const Route = createRootRoute({
   component: RootComponent,
