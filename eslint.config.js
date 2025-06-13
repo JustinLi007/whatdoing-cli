@@ -5,6 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import reactX from 'eslint-plugin-react-x'
 import reactDom from 'eslint-plugin-react-dom'
+import pluginQuery from '@tanstack/eslint-plugin-query'
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -23,6 +24,7 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    ...pluginQuery.configs['flat/recommended'],
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,

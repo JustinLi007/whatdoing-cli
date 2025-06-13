@@ -1,12 +1,30 @@
 /// <reference types="vite/client" />
 
-interface MenuItem {
+type LoginRequestParams = {
+  email: string;
+  password: string;
+}
+
+type SignupRequestParams = LoginRequestParams & {
+  username: string | null,
+}
+
+type MenuItem = {
   Id: string,
   Name: string,
   Path: string,
 }
 
-interface Content {
+type User = {
+  id: string,
+  created_at: number,
+  updated_at: number,
+  email: string,
+  role: string,
+  username: string | null,
+}
+
+type Content = {
   Id: string,
   Title: string,
   Episode: number,

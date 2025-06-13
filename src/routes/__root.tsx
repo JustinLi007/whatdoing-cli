@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Menu from "../ui/Menu";
 import Header from "../ui/Header";
 
@@ -19,6 +20,16 @@ function RootComponent() {
       Id: "2",
       Name: "New Content",
       Path: "/new-content",
+    },
+    {
+      Id: "3",
+      Name: "Sign Up",
+      Path: "/signup",
+    },
+    {
+      Id: "4",
+      Name: "Login",
+      Path: "/login",
     },
   ];
 
@@ -56,6 +67,7 @@ function RootComponent() {
         </footer>
       </div>
       <TanStackRouterDevtools />
+      <ReactQueryDevtools />
     </>
   )
 }

@@ -49,7 +49,7 @@ function NewContent() {
     setDescription(val);
   }
 
-  function handleSubmit(event: FormEvent) {
+  function handleFormSubmit(event: FormEvent) {
     event.preventDefault();
     // @ts-ignore
     const formData = new FormData(event.target);
@@ -61,7 +61,7 @@ function NewContent() {
   return (
     <>
       <div className={`py-4`}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleFormSubmit}>
           <div className={`flex flex-col flex-nowrap p-4 gap-4`}>
             <div>
               <ButtonDropdown

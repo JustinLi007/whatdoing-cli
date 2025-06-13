@@ -2,6 +2,7 @@ import { routeTree } from "./routeTree.gen";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import NotFound from "./NotFound";
 import Error from "./Error";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createRouter({
   routeTree: routeTree,
@@ -11,6 +12,8 @@ const router = createRouter({
   defaultErrorComponent: Error,
 })
 
+const queryClient = new QueryClient();
+
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router
@@ -19,7 +22,11 @@ declare module "@tanstack/react-router" {
 
 function App() {
   return (
-    <RouterProvider router={router} ></RouterProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} ></RouterProvider>
+      </QueryClientProvider>
+    </>
   );
 }
 
