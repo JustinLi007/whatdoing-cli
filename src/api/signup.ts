@@ -13,12 +13,13 @@ export default async function FetchSignup(params: SignupRequestParams): Promise<
   }
 
   const url = "http://localhost:8000/users/signup"
-  const payload = {
-    "method": "POST",
-    "headers": {
+  const payload: RequestInit = {
+    method: "POST",
+    credentials: "include",
+    headers: {
       "Content-Type": "application/json",
     },
-    "body": JSON.stringify(params),
+    body: JSON.stringify(params),
   }
 
   try {
