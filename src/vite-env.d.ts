@@ -1,34 +1,47 @@
 /// <reference types="vite/client" />
 
-type LoginRequestParams = {
+type SignupRequest = {
   email: string;
   password: string;
+  username: string | null;
 }
 
-type SignupRequestParams = LoginRequestParams & {
-  username: string | null,
+type LoginRequest = Pick<SignupRequest, "email" | "password">
+
+type LoginResponse = {
+  next: string;
+}
+
+type SignupResponse = Pick<LoginResponse, "next">
+
+type UserRequest = {
+  userId: string;
+}
+
+type UserResponse = {
+  user: User;
 }
 
 type MenuItem = {
-  Id: string,
-  Name: string,
-  Path: string,
+  id: string;
+  name: string;
+  path: string;
 }
 
 type User = {
-  id: string,
-  created_at: number,
-  updated_at: number,
-  email: string,
-  role: string,
-  username: string | null,
+  id: string;
+  created_at: number;
+  updated_at: number;
+  email: string;
+  role: string;
+  username: string | null;
 }
 
 type Content = {
-  Id: string,
-  Title: string,
-  Episode: number,
-  Description: string,
-  ImageSrc: string,
-  ContentLink: string,
+  id: string;
+  title: string;
+  episode: number;
+  description: string;
+  imageSrc: string;
+  contentLink: string;
 }

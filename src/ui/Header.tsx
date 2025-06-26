@@ -14,10 +14,10 @@ export default function Header(params: Parameters) {
     >
       <span>
         <Link
-          to={params.HeaderLink.Path}
+          to={params.HeaderLink.path}
           className={``}
         >
-          {params.HeaderLink.Name}
+          {params.HeaderLink.name}
         </Link>
       </span>
       <button

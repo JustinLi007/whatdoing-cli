@@ -6,9 +6,9 @@ export const Route = createLazyFileRoute('/')({
 })
 
 const getStarted: MenuItem = {
-  Id: "",
-  Name: "Get Started",
-  Path: "/login",
+  id: "",
+  name: "Get Started",
+  path: "/login",
 }
 
 function Index() {
@@ -22,12 +22,12 @@ function Index() {
       </div>
       <div>
         <Link
-          to={getStarted.Path}
+          to={getStarted.path}
           className={`inline-block content-center w-full h-full p-4 active:bg-gray-600 border-1 border-gray-500`}
           activeProps={{ className: `font-bold` }}
           activeOptions={{ exact: true }}
           onClick={() => { return; }}
-        >{getStarted.Name}
+        >{getStarted.name}
         </Link>
       </div>
     </div>

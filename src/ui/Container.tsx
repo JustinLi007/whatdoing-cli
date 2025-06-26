@@ -16,12 +16,12 @@ export default function Container(params: Parameters) {
   const elements = filteredItems.map((value) => {
     return (
       <Card
-        key={value.Id}
-        Title={value.Title}
-        Episode={value.Episode}
-        Description={value.Description}
-        ImageSrc={value.ImageSrc}
-        ContentLink={value.ContentLink}
+        key={value.id}
+        Title={value.title}
+        Episode={value.episode}
+        Description={value.description}
+        ImageSrc={value.imageSrc}
+        ContentLink={value.contentLink}
       />
     );
   })

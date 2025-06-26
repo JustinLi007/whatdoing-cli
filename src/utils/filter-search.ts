@@ -14,9 +14,9 @@ export default function filterSearch(original: Content[], searchValue: string, c
   }
 
   for (const v of originalCopy) {
-    let cur = v.Title;
+    let cur = v.title;
     if (!caseSensivity) {
-      cur = v.Title.toLowerCase();
+      cur = v.title.toLowerCase();
     }
 
     const idx = kmp(cur, searchVal);

@@ -12,24 +12,24 @@ export const Route = createRootRoute({
 function RootComponent() {
   const menuItems: MenuItem[] = [
     {
-      Id: "1",
-      Name: "Home",
-      Path: "/home",
+      id: "1",
+      name: "Home",
+      path: "/home",
     },
     {
-      Id: "2",
-      Name: "New Content",
-      Path: "/new-content",
+      id: "2",
+      name: "New Content",
+      path: "/new-content",
     },
     {
-      Id: "3",
-      Name: "Sign Up",
-      Path: "/signup",
+      id: "3",
+      name: "Sign Up",
+      path: "/signup",
     },
     {
-      Id: "4",
-      Name: "Login",
-      Path: "/login",
+      id: "4",
+      name: "Login",
+      path: "/login",
     },
   ];
 
@@ -44,7 +44,7 @@ function RootComponent() {
       <div className={`flex flex-col h-dvh`}>
         <header className={`shrink-0`}>
           <Header
-            HeaderLink={{ Id: "whatdoing-header", Name: "Whatdoing", Path: "/" }}
+            HeaderLink={{ id: "whatdoing-header", name: "Whatdoing", path: "/" }}
             BtnOnClick={handleBtnClick}
           />
           <div

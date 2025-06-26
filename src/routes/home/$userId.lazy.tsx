@@ -3,6 +3,8 @@ import { useState, type ChangeEvent } from 'react';
 import Search from '../../ui/Search';
 import ButtonDropdown from '../../ui/ButtonDropdown';
 import Container from '../../ui/Container';
+import { fetchUserById } from '../../api/users';
+import { useQuery } from '@tanstack/react-query';
 
 export const Route = createLazyFileRoute('/home/$userId')({
   component: Home,
@@ -16,41 +18,50 @@ const sortOptions = [
 
 const contestList: Content[] = [
   {
-    Id: "1",
-    Title: "Shiunji-ke_no_Kodomotachi",
-    Episode: 1,
-    Description: "anime description here or whatever",
-    ImageSrc: "https://cdn.myanimelist.net/images/anime/1955/148360.jpg",
-    ContentLink: "https://myanimelist.net/anime/58131/Shiunji-ke_no_Kodomotachi",
+    id: "1",
+    title: "Shiunji-ke_no_Kodomotachi",
+    episode: 1,
+    description: "anime description here or whatever",
+    imageSrc: "https://cdn.myanimelist.net/images/anime/1955/148360.jpg",
+    contentLink: "https://myanimelist.net/anime/58131/Shiunji-ke_no_Kodomotachi",
   },
   {
-    Id: "2",
-    Title: "Danjo no Yuujou wa Seiritsu suru? (Iya, Shinai!!)",
-    Episode: 2,
-    Description: "anime description here or whatever",
-    ImageSrc: "https://cdn.myanimelist.net/images/anime/1743/126822l.jpg",
-    ContentLink: "https://myanimelist.net/anime/52709/Danjo_no_Yuujou_wa_Seiritsu_suru_Iya_Shinai",
+    id: "2",
+    title: "Danjo no Yuujou wa Seiritsu suru? (Iya, Shinai!!)",
+    episode: 2,
+    description: "anime description here or whatever",
+    imageSrc: "https://cdn.myanimelist.net/images/anime/1743/126822l.jpg",
+    contentLink: "https://myanimelist.net/anime/52709/Danjo_no_Yuujou_wa_Seiritsu_suru_Iya_Shinai",
   },
   {
-    Id: "3",
-    Title: "Haite Kudasai, Takamine-san",
-    Episode: 3,
-    Description: "anime description here or whatever",
-    ImageSrc: "https://m.media-amazon.com/images/M/MV5BNjkyZWIzNDMtODFmOC00NjY2LWJhNjgtZDBiMzVmNmIxZjdlXkEyXkFqcGc@._V1_.jpg",
-    ContentLink: "https://myanimelist.net/anime/59457/Haite_Kudasai_Takamine-san",
+    id: "3",
+    title: "Haite Kudasai, Takamine-san",
+    episode: 3,
+    description: "anime description here or whatever",
+    imageSrc: "https://m.media-amazon.com/images/M/MV5BNjkyZWIzNDMtODFmOC00NjY2LWJhNjgtZDBiMzVmNmIxZjdlXkEyXkFqcGc@._V1_.jpg",
+    contentLink: "https://myanimelist.net/anime/59457/Haite_Kudasai_Takamine-san",
   },
   {
-    Id: "4",
-    Title: "Summer Pockets",
-    Episode: 4,
-    Description: "anime description here or whatever",
-    ImageSrc: "https://m.media-amazon.com/images/M/MV5BNDUxM2FiY2UtMDFlNS00OGFiLTlkNTMtY2ZlYzVlZWUzNTFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-    ContentLink: "https://myanimelist.net/anime/50694/Summer_Pockets",
+    id: "4",
+    title: "Summer Pockets",
+    episode: 4,
+    description: "anime description here or whatever",
+    imageSrc: "https://m.media-amazon.com/images/M/MV5BNDUxM2FiY2UtMDFlNS00OGFiLTlkNTMtY2ZlYzVlZWUzNTFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+    contentLink: "https://myanimelist.net/anime/50694/Summer_Pockets",
   },
 ]
 
 function Home() {
   const { userId } = Route.useParams();
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: [userId],
+    queryFn: async () => {
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      const data = await fetchUserById({ userId: userId });
+      console.log(data);
+      return data;
+    },
+  });
 
   const [sortDropdownHidden, setSortDropdownHidden] = useState(true);
   const [selectedSortValue, setSelectedSortValue] = useState("");
@@ -71,10 +82,22 @@ function Home() {
     setSearchValue(val);
   }
 
+  if (isPending) {
+    return (
+      <div>Loading...</div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div>something went wrong... {error.message}</div>
+    );
+  }
+
   return (
     <>
       <div>
-        hello {userId}...
+        hello {data.user.email}...
       </div>
 
       <div className={`flex flex-row flex-nowrap gap-2`}>

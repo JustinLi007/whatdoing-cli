@@ -16,9 +16,9 @@ ${params.MenuHidden ? "hidden" : ""}`
       {params.MenuItems.map((value) => {
         return (
           <Option
-            key={value.Id}
-            Name={value.Name}
-            Path={value.Path}
+            key={value.id}
+            Name={value.name}
+            Path={value.path}
             OnClick={params.OnClick}
           />
         );

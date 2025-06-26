@@ -24,8 +24,8 @@ function sort(original: Content[], fn: (original: Content[]) => Content[]): Cont
 
 function sortAsc(original: Content[]): Content[] {
   const result = original.slice().sort((a, b) => {
-    const aVal = a.Title;
-    const bVal = b.Title;
+    const aVal = a.title;
+    const bVal = b.title;
     if (aVal > bVal) {
       return 1;
     } else if (aVal < bVal) {
@@ -39,8 +39,8 @@ function sortAsc(original: Content[]): Content[] {
 
 function sortDesc(original: Content[]): Content[] {
   const result = original.slice().sort((b, a) => {
-    const aVal = a.Title;
-    const bVal = b.Title;
+    const aVal = a.title;
+    const bVal = b.title;
     if (aVal > bVal) {
       return 1;
     } else if (aVal < bVal) {
