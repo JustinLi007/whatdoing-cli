@@ -1,21 +1,20 @@
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import Input from '../ui/Input';
-import FetchSignup from '../api/signup';
+import Input from '../../ui/Input';
+import FetchLogin from '../../api/login';
 
-export const Route = createLazyFileRoute('/signup')({
-  component: Signup,
+export const Route = createLazyFileRoute('/login/')({
+  component: Login,
 })
 
-function Signup() {
+function Login() {
   const navigate = useNavigate({
-    from: "/signup",
+    from: "/login",
   });
   const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
 
   function handleEmailOnChange(event: ChangeEvent) {
     // @ts-ignore
@@ -29,24 +28,18 @@ function Signup() {
     setPassword(val);
   }
 
-  function handleUsernameOnChange(event: ChangeEvent) {
-    // @ts-ignore
-    const val = event.target.value;
-    setUsername(val);
-  }
-
   const mutation = useMutation({
-    // TODO:
-    mutationFn: FetchSignup,
-    onSuccess: () => {
+    mutationFn: FetchLogin,
+    onSuccess: (data) => {
       // Invalidate and refetch
       queryClient.invalidateQueries();
+      console.log(data);
       navigate({
-        to: "/home",
+        to: `${data.next}`,
       });
     },
     onError: (err) => {
-      console.log(`error: failed to sign up: ${err}`);
+      console.log(`error: failed to login: ${err}`);
     },
   });
 
@@ -56,7 +49,6 @@ function Signup() {
     mutation.mutate({
       email: email,
       password: password,
-      username: username,
     });
   }
 
@@ -84,17 +76,7 @@ function Signup() {
           />
         </div>
         <div>
-          <Input
-            Id='username'
-            Value={username}
-            Type='text'
-            Label='Username (optional)'
-            OnChange={handleUsernameOnChange}
-            Required={false}
-          />
-        </div>
-        <div>
-          <button type="submit" className={`border-1 border-gray-500 mt-4 p-3 w-full active:bg-gray-500`}>Sign Up</button>
+          <button type="submit" className={`border-1 border-gray-500 mt-4 p-3 w-full active:bg-gray-500`}>Login</button>
         </div>
       </form>
     </div>

@@ -1,10 +1,10 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState, type ChangeEvent } from 'react';
-import Search from '../ui/Search';
-import ButtonDropdown from '../ui/ButtonDropdown';
-import Container from '../ui/Container';
+import Search from '../../ui/Search';
+import ButtonDropdown from '../../ui/ButtonDropdown';
+import Container from '../../ui/Container';
 
-export const Route = createLazyFileRoute('/home')({
+export const Route = createLazyFileRoute('/home/$userId')({
   component: Home,
 })
 
@@ -50,6 +50,8 @@ const contestList: Content[] = [
 ]
 
 function Home() {
+  const { userId } = Route.useParams();
+
   const [sortDropdownHidden, setSortDropdownHidden] = useState(true);
   const [selectedSortValue, setSelectedSortValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
@@ -71,6 +73,10 @@ function Home() {
 
   return (
     <>
+      <div>
+        hello {userId}...
+      </div>
+
       <div className={`flex flex-row flex-nowrap gap-2`}>
         <Search SearchValue={searchValue} OnChange={handleSearchInputChange} />
         <div className={`flex flex-row flex-nowrap gap-0.5 ml-auto`}>
