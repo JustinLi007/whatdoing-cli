@@ -9,10 +9,11 @@ type SignupRequest = {
 type LoginRequest = Pick<SignupRequest, "email" | "password">
 
 type LoginResponse = {
+  user: User;
   next: string;
 }
 
-type SignupResponse = Pick<LoginResponse, "next">
+type SignupResponse = Pick<LoginResponse, "user" | "next">
 
 type UserRequest = {
   userId: string;

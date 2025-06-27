@@ -13,7 +13,9 @@ export async function fetchUserById(params: UserRequest): Promise<UserResponse> 
   const url = `http://localhost:8000/users/${params.userId}`
 
   try {
-    const resp = await fetch(url);
+    const resp = await fetch(url, {
+      credentials: "include",
+    });
     if (!resp.ok) {
       throw new Error(`failed with code ${resp.status}, ${resp.statusText}.`);
     }

@@ -14,11 +14,19 @@ ${params.MenuHidden ? "hidden" : ""}`
       }
     >
       {params.MenuItems.map((value) => {
+        let pathVal = value.path;
+        if (value.name === "Home") {
+          const userId = localStorage.getItem("whatdoing-user-id");
+          if (userId) {
+            pathVal = `${value.path}/${userId}`;
+          }
+        }
+
         return (
           <Option
             key={value.id}
             Name={value.name}
-            Path={value.path}
+            Path={pathVal}
             OnClick={params.OnClick}
           />
         );

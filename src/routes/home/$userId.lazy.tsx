@@ -5,6 +5,7 @@ import ButtonDropdown from '../../ui/ButtonDropdown';
 import Container from '../../ui/Container';
 import { fetchUserById } from '../../api/users';
 import { useQuery } from '@tanstack/react-query';
+import Refresher from '../../ui/Refresher';
 
 export const Route = createLazyFileRoute('/home/$userId')({
   component: Home,
@@ -58,7 +59,6 @@ function Home() {
     queryFn: async () => {
       // await new Promise((resolve) => setTimeout(resolve, 2000));
       const data = await fetchUserById({ userId: userId });
-      console.log(data);
       return data;
     },
   });
@@ -119,6 +119,7 @@ function Home() {
         SearchValue={searchValue}
         SortValue={selectedSortValue}
       />
+      <Refresher />
     </>
   );
 }

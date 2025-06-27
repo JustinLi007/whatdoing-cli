@@ -3,6 +3,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Input from '../../ui/Input';
 import FetchLogin from '../../api/login';
+import { refreshInterval } from '../../utils/timer';
 
 export const Route = createLazyFileRoute('/login/')({
   component: Login,
@@ -13,8 +14,8 @@ function Login() {
     from: "/login",
   });
   const queryClient = useQueryClient();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("sample@sample.com");
+  const [password, setPassword] = useState("shit");
 
   function handleEmailOnChange(event: ChangeEvent) {
     // @ts-ignore
@@ -33,7 +34,9 @@ function Login() {
     onSuccess: (data) => {
       // Invalidate and refetch
       queryClient.invalidateQueries();
-      console.log(data);
+      localStorage.setItem("whatdoing-user-id", data.user.id);
+      const t = refreshInterval({ seconds: 10, minutes: 1, hours: 1 });
+      localStorage.setItem("whatdoing-next-refresh", new Date(t).toString());
       navigate({
         to: `${data.next}`,
       });
