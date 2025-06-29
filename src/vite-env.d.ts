@@ -23,6 +23,18 @@ type UserResponse = {
   user: User;
 }
 
+type CreateContentRequest = {
+  contentId?: string;
+  name: string;
+  episodes?: number;
+  imageUrl?: string;
+  description?: string;
+}
+
+type CreateContentResponse = {
+  next: string;
+}
+
 type MenuItem = {
   id: string;
   name: string;

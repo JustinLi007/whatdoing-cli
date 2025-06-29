@@ -1,9 +1,11 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import ButtonDropdown from '../ui/ButtonDropdown';
 import Input from '../ui/Input';
 import TextArea from '../ui/TextArea';
 import Card from '../ui/Card';
+import { FetchCreateContent } from '../api/content';
 
 export const Route = createLazyFileRoute('/new-content')({
   component: NewContent,
@@ -16,6 +18,11 @@ const contentTypes = [
 ]
 
 function NewContent() {
+  const navigate = useNavigate({
+    from: "/new-content",
+  });
+  const queryClient = useQueryClient();
+
   const [contentTypeDropdownHidden, setContentTypeDropdownHidden] = useState(true);
   const [selectedContentType, setSelectedContentType] = useState("");
   const [name, setName] = useState("");
@@ -49,8 +56,27 @@ function NewContent() {
     setDescription(val);
   }
 
+  const mutation = useMutation({
+    mutationFn: FetchCreateContent,
+    onSuccess: (data) => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries();
+      navigate({
+        to: `${data.next}`,
+      });
+    },
+    onError: (err) => {
+      console.log(`error: failed to create content: ${err}`);
+    },
+  });
+
   function handleFormSubmit(event: FormEvent) {
     event.preventDefault();
+
+    mutation.mutate({
+      name: name,
+    });
+
     // @ts-ignore
     const formData = new FormData(event.target);
     console.log(`Name: ${formData.get("name")}`);
@@ -89,7 +115,7 @@ function NewContent() {
                 Type="url"
                 Value={imageUrl}
                 Label="Image Url"
-                Required={true}
+                Required={false}
                 OnChange={handleImageUrlOnChange}
               />
             </div>
@@ -98,7 +124,7 @@ function NewContent() {
                 Id="description"
                 Value={description}
                 Label="Description"
-                Required={true}
+                Required={false}
                 OnChange={handleDescriptionOnChange}
               />
             </div>
