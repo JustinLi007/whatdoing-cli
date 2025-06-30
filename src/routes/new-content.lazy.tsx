@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import ButtonDropdown from '../ui/ButtonDropdown';
@@ -6,6 +6,7 @@ import Input from '../ui/Input';
 import TextArea from '../ui/TextArea';
 import Card from '../ui/Card';
 import { FetchCreateContent } from '../api/content';
+import SearchDropdown from '../ui/SearchDropdown';
 
 export const Route = createLazyFileRoute('/new-content')({
   component: NewContent,
@@ -16,6 +17,8 @@ const contentTypes = [
   "Manga",
   "Manhwa",
 ]
+
+const items: string[] = ["one", "two", "three", "four", "five"];
 
 function NewContent() {
   const navigate = useNavigate({
@@ -28,6 +31,50 @@ function NewContent() {
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [description, setDescription] = useState("");
+  const [searchDropdownHidden, setSearchDropdownHidden] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
+
+  function handleDocClick(event: MouseEvent) {
+    const element = document.getElementById("new-content-search-dropdown");
+    if (!element) {
+      return;
+    }
+
+    const t = event.target;
+    if (!element.contains(t)) {
+      setSearchDropdownHidden(true);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocClick);
+    return () => {
+      document.removeEventListener("click", handleDocClick);
+    }
+  }, [])
+
+  function handleSearchClick() {
+    if (searchValue.length > 0) {
+      setSearchDropdownHidden(false);
+    }
+  }
+
+  function handleSearchOnChange(event: ChangeEvent) {
+    const val = event.target.value;
+    setSearchValue(val);
+
+    if (val.trim().length === 0) {
+      setSearchDropdownHidden(true);
+    } else {
+      setSearchDropdownHidden(false);
+    }
+  }
+
+  function handleSearchDropdownOnSelect(value: string) {
+    setSearchValue(value);
+    setSearchDropdownHidden(true);
+    // TODO: 
+  }
 
   function handleContentTypeDropdownSelection(value: string) {
     setSelectedContentType(value);
@@ -86,6 +133,18 @@ function NewContent() {
 
   return (
     <>
+      <div className={`w-min`}>
+        <SearchDropdown
+          id={`new-content-search-dropdown`}
+          searchValue={searchValue}
+          dropdownHidden={searchDropdownHidden}
+          dropdownItems={items}
+          onChange={handleSearchOnChange}
+          onClick={handleSearchClick}
+          onSelect={handleSearchDropdownOnSelect}
+        />
+      </div>
+
       <div className={`py-4`}>
         <form onSubmit={handleFormSubmit}>
           <div className={`flex flex-col flex-nowrap p-4 gap-4`}>

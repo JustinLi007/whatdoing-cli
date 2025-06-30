@@ -15,7 +15,7 @@ export async function FetchCreateContent(params: CreateContentRequest): Promise<
   }
 
   // TODO: need endpoint
-  const url = ""
+  const url = "http://localhost:8000/contents"
   const payload: RequestInit = {
     method: "POST",
     credentials: "include",
