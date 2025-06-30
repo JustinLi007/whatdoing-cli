@@ -1,6 +1,7 @@
 import Card from "./Card";
 import filterSearch from "../utils/filter-search";
 import filterSort from "../utils/filter-sort";
+import kmp from "../utils/kmp";
 
 interface Parameters {
   Items: Content[],
@@ -10,8 +11,38 @@ interface Parameters {
 
 export default function Container(params: Parameters) {
   const baseItems = params.Items.slice();
-  let filteredItems = filterSearch(baseItems, params.SearchValue, false);
-  filteredItems = filterSort(filteredItems, params.SortValue);
+
+  let filteredItems = filterSearch<Content, string>(baseItems, params.SearchValue, (a, b) => {
+    if (b.trim().toLowerCase() === "") {
+      return true;
+    }
+
+    const res = kmp(a.title.trim().toLowerCase(), b.trim().toLowerCase()) >= 0;
+    return res;
+  });
+
+  const asc: SortCompare<Content> = (a, b) => {
+    if (a.title < b.title) {
+      return -1;
+    } else if (a.title > b.title) {
+      return 1;
+    }
+    return 0;
+  }
+  const desc: SortCompare<Content> = (a, b) => {
+    if (a.title > b.title) {
+      return -1;
+    } else if (a.title < b.title) {
+      return 1;
+    }
+    return 0;
+  }
+
+  if (params.SortValue.trim().toLowerCase() === "asc") {
+    filteredItems = filterSort(filteredItems, asc);
+  } else if (params.SortValue.trim().toLowerCase() === "desc") {
+    filteredItems = filterSort(filteredItems, desc);
+  }
 
   const elements = filteredItems.map((value) => {
     return (

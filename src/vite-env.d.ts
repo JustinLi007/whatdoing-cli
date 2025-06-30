@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+type SortCompare<T> = (base: T, other: T) => -1 | 0 | 1;
+type CompareFn<T, U> = (base: T, other: U) => boolean;
+
 type SignupRequest = {
   email: string;
   password: string;

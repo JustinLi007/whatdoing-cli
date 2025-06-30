@@ -1,6 +1,7 @@
 import { type ChangeEvent, type MouseEvent } from 'react';
 import Dropdown from "./Dropdown";
 import Search from "./Search";
+import filterSearch from '../utils/filter-search';
 
 type Parameters = {
   id?: string;
@@ -13,6 +14,16 @@ type Parameters = {
 }
 
 export default function SearchDropdown(params: Parameters) {
+  const baseItems = params.dropdownItems.slice();
+  // FIX: filterSearch is shit right now
+  const tempWrapper = [];
+  for (const v of baseItems) {
+    tempWrapper.push({
+      title: v,
+    });
+  }
+  const filteredItems = filterSearch(baseItems, params.searchValue, false);
+
   return (
     <>
       <div
