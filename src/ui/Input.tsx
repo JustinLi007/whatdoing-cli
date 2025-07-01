@@ -3,7 +3,7 @@ import type { ChangeEvent } from "react";
 interface Parameters {
   Type: string,
   Id: string,
-  Value: string,
+  Value: string | number,
   Label: string,
   Required: boolean,
   OnChange: (event: ChangeEvent) => void,

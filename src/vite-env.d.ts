@@ -19,7 +19,7 @@ type LoginResponse = {
 type SignupResponse = Pick<LoginResponse, "user" | "next">
 
 type UserRequest = {
-  userId: string;
+  user_id: string;
 }
 
 type UserResponse = {
@@ -27,15 +27,36 @@ type UserResponse = {
 }
 
 type CreateContentRequest = {
-  contentId?: string;
+  content_id?: string;
   name: string;
+  content_type: string;
   episodes?: number;
-  imageUrl?: string;
+  image_url?: string;
   description?: string;
 }
 
 type CreateContentResponse = {
   next: string;
+}
+
+type AllAnimeResponse = {
+  anime_list: Anime[];
+}
+
+type Anime = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  episodes: number;
+  description: string;
+  anime_name: AnimeName;
+}
+
+type AnimeName = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
 }
 
 type MenuItem = {
@@ -58,6 +79,6 @@ type Content = {
   title: string;
   episode: number;
   description: string;
-  imageSrc: string;
-  contentLink: string;
+  image_src: string;
+  content_link: string;
 }

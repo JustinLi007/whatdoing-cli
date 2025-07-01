@@ -51,8 +51,8 @@ export default function Container(params: Parameters) {
         Title={value.title}
         Episode={value.episode}
         Description={value.description}
-        ImageSrc={value.imageSrc}
-        ContentLink={value.contentLink}
+        ImageSrc={value.image_src}
+        ContentLink={value.content_link}
       />
     );
   })

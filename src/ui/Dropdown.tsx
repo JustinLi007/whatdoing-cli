@@ -21,7 +21,7 @@ export default function Dropdown(params: Parameters) {
 
   return (
     <div
-      className={`absolute left-0 right-0 bg-gray-700 ${params.DropdownHidden ? "hidden" : ""}`}
+      className={`absolute left-0 right-0 bg-gray-700 z-10 ${params.DropdownHidden ? "hidden" : ""}`}
     >
       {items}
     </div>

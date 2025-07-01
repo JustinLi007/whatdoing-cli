@@ -29,6 +29,7 @@ function NewContent() {
   const [contentTypeDropdownHidden, setContentTypeDropdownHidden] = useState(true);
   const [selectedContentType, setSelectedContentType] = useState("");
   const [name, setName] = useState("");
+  const [episodes, setEpisodes] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
   const [description, setDescription] = useState("");
   const [searchDropdownHidden, setSearchDropdownHidden] = useState(true);
@@ -91,6 +92,11 @@ function NewContent() {
     setName(val);
   }
 
+  function handleEpisodesOnChange(event: ChangeEvent) {
+    const val = event.target.value;
+    setEpisodes(val);
+  }
+
   function handleImageUrlOnChange(event: ChangeEvent) {
     // @ts-ignore
     const val = event.target.value;
@@ -122,30 +128,26 @@ function NewContent() {
 
     mutation.mutate({
       name: name,
+      content_type: selectedContentType,
     });
-
-    // @ts-ignore
-    const formData = new FormData(event.target);
-    console.log(`Name: ${formData.get("name")}`);
-    console.log(`Image Url: ${formData.get("image")}`);
-    console.log(`Description: ${formData.get("description")}`);
   }
 
   return (
     <>
-      <div className={`w-min`}>
-        <SearchDropdown
-          id={`new-content-search-dropdown`}
-          searchValue={searchValue}
-          dropdownHidden={searchDropdownHidden}
-          dropdownItems={items}
-          onChange={handleSearchOnChange}
-          onClick={handleSearchClick}
-          onSelect={handleSearchDropdownOnSelect}
-        />
-      </div>
-
       <div className={`py-4`}>
+
+        <div className={`p-4`}>
+          <SearchDropdown
+            id={`new-content-search-dropdown`}
+            searchValue={searchValue}
+            dropdownHidden={searchDropdownHidden}
+            dropdownItems={items}
+            onChange={handleSearchOnChange}
+            onClick={handleSearchClick}
+            onSelect={handleSearchDropdownOnSelect}
+          />
+        </div>
+
         <form onSubmit={handleFormSubmit}>
           <div className={`flex flex-col flex-nowrap p-4 gap-4`}>
             <div>
@@ -170,6 +172,16 @@ function NewContent() {
             </div>
             <div>
               <Input
+                Id="episodes"
+                Type="number"
+                Value={episodes}
+                Label="Episodes"
+                Required={false}
+                OnChange={handleEpisodesOnChange}
+              />
+            </div>
+            <div>
+              <Input
                 Id="image"
                 Type="url"
                 Value={imageUrl}
@@ -188,19 +200,19 @@ function NewContent() {
               />
             </div>
             <div>
-              <Card
-                Title={name}
-                Episode={1}
-                ContentLink=""
-                Description={description}
-                ImageSrc={imageUrl}
-              />
-            </div>
-            <div>
               <button type="submit" className={`border-1 border-gray-500 mt-4 p-3 w-full active:bg-gray-500`}>Create Entry</button>
             </div>
           </div>
         </form>
+        <div className={`p-4`}>
+          <Card
+            Title={name}
+            Episode={episodes}
+            ContentLink=""
+            Description={description}
+            ImageSrc={imageUrl}
+          />
+        </div>
       </div>
     </>
   );

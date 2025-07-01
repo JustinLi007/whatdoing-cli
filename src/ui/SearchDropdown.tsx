@@ -2,6 +2,7 @@ import { type ChangeEvent, type MouseEvent } from 'react';
 import Dropdown from "./Dropdown";
 import Search from "./Search";
 import filterSearch from '../utils/filter-search';
+import kmp from '../utils/kmp';
 
 type Parameters = {
   id?: string;
@@ -15,18 +16,19 @@ type Parameters = {
 
 export default function SearchDropdown(params: Parameters) {
   const baseItems = params.dropdownItems.slice();
-  // FIX: filterSearch is shit right now
-  const tempWrapper = [];
-  for (const v of baseItems) {
-    tempWrapper.push({
-      title: v,
-    });
-  }
-  const filteredItems = filterSearch(baseItems, params.searchValue, false);
+  let filteredItems = filterSearch<string, string>(baseItems, params.searchValue, (a, b) => {
+    if (b.trim().toLowerCase() === "") {
+      return true;
+    }
+
+    const res = kmp(a, b) >= 0;
+    return res;
+  });
 
   return (
     <>
       <div
+        className={`inline-block relative w-full`}
         id={params.id}
       >
         <Search
@@ -36,7 +38,7 @@ export default function SearchDropdown(params: Parameters) {
         />
         <Dropdown
           DropdownHidden={params.dropdownHidden}
-          DropdownItems={params.dropdownItems}
+          DropdownItems={filteredItems}
           OnSelect={params.onSelect}
         />
       </div>

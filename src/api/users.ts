@@ -10,7 +10,7 @@ export async function fetchUserById(params: UserRequest): Promise<UserResponse> 
     throw new Error(`invalid params`);
   }
 
-  const url = `http://localhost:8000/users/${params.userId}`
+  const url = `http://localhost:8000/users/${params.user_id}`
 
   try {
     const resp = await fetch(url, {

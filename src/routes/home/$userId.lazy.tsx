@@ -23,32 +23,32 @@ const contestList: Content[] = [
     title: "Shiunji-ke_no_Kodomotachi",
     episode: 1,
     description: "anime description here or whatever",
-    imageSrc: "https://cdn.myanimelist.net/images/anime/1955/148360.jpg",
-    contentLink: "https://myanimelist.net/anime/58131/Shiunji-ke_no_Kodomotachi",
+    image_src: "https://cdn.myanimelist.net/images/anime/1955/148360.jpg",
+    content_link: "https://myanimelist.net/anime/58131/Shiunji-ke_no_Kodomotachi",
   },
   {
     id: "2",
     title: "Danjo no Yuujou wa Seiritsu suru? (Iya, Shinai!!)",
     episode: 2,
     description: "anime description here or whatever",
-    imageSrc: "https://cdn.myanimelist.net/images/anime/1743/126822l.jpg",
-    contentLink: "https://myanimelist.net/anime/52709/Danjo_no_Yuujou_wa_Seiritsu_suru_Iya_Shinai",
+    image_src: "https://cdn.myanimelist.net/images/anime/1743/126822l.jpg",
+    content_link: "https://myanimelist.net/anime/52709/Danjo_no_Yuujou_wa_Seiritsu_suru_Iya_Shinai",
   },
   {
     id: "3",
     title: "Haite Kudasai, Takamine-san",
     episode: 3,
     description: "anime description here or whatever",
-    imageSrc: "https://m.media-amazon.com/images/M/MV5BNjkyZWIzNDMtODFmOC00NjY2LWJhNjgtZDBiMzVmNmIxZjdlXkEyXkFqcGc@._V1_.jpg",
-    contentLink: "https://myanimelist.net/anime/59457/Haite_Kudasai_Takamine-san",
+    image_src: "https://m.media-amazon.com/images/M/MV5BNjkyZWIzNDMtODFmOC00NjY2LWJhNjgtZDBiMzVmNmIxZjdlXkEyXkFqcGc@._V1_.jpg",
+    content_link: "https://myanimelist.net/anime/59457/Haite_Kudasai_Takamine-san",
   },
   {
     id: "4",
     title: "Summer Pockets",
     episode: 4,
     description: "anime description here or whatever",
-    imageSrc: "https://m.media-amazon.com/images/M/MV5BNDUxM2FiY2UtMDFlNS00OGFiLTlkNTMtY2ZlYzVlZWUzNTFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-    contentLink: "https://myanimelist.net/anime/50694/Summer_Pockets",
+    image_src: "https://m.media-amazon.com/images/M/MV5BNDUxM2FiY2UtMDFlNS00OGFiLTlkNTMtY2ZlYzVlZWUzNTFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+    content_link: "https://myanimelist.net/anime/50694/Summer_Pockets",
   },
 ]
 
@@ -58,7 +58,7 @@ function Home() {
     queryKey: [userId],
     queryFn: async () => {
       // await new Promise((resolve) => setTimeout(resolve, 2000));
-      const data = await fetchUserById({ userId: userId });
+      const data = await fetchUserById({ user_id: userId });
       return data;
     },
   });
@@ -101,7 +101,9 @@ function Home() {
       </div>
 
       <div className={`flex flex-row flex-nowrap gap-2`}>
-        <Search SearchValue={searchValue} OnChange={handleSearchInputChange} />
+        <div>
+          <Search SearchValue={searchValue} OnChange={handleSearchInputChange} />
+        </div>
         <div className={`flex flex-row flex-nowrap gap-0.5 ml-auto`}>
           <ButtonDropdown
             Name={`Sort`}
