@@ -1,27 +1,27 @@
 interface Parameters {
-  DropdownItems: string[],
-  DropdownHidden: boolean,
-  OnSelect: (value: string) => void
+  dropdownItems: SuggestionItem[];
+  dropdownHidden: boolean;
+  onSelect: (value: SuggestionItem) => void;
 }
 
 export default function Dropdown(params: Parameters) {
-  const items = params.DropdownItems.map((value, index) => {
+  const items = params.dropdownItems.map((value) => {
     return (
       <div
-        key={`${value}-${index}`}
+        key={value.key}
         onClick={() => {
-          params.OnSelect(value);
+          params.onSelect(value);
         }}
         className={`hover:bg-gray-500`}
       >
-        {value}
+        {value.title}
       </div>
     );
   });
 
   return (
     <div
-      className={`absolute left-0 right-0 bg-gray-700 z-10 ${params.DropdownHidden ? "hidden" : ""}`}
+      className={`absolute left-0 right-0 bg-gray-700 z-10 ${params.dropdownHidden ? "hidden" : ""}`}
     >
       {items}
     </div>

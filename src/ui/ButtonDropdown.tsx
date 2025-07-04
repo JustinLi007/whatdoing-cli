@@ -1,30 +1,32 @@
 import Dropdown from "./Dropdown";
 
 interface Parameters {
-  Name: string
-  SelectedValue: string,
-  DropdownHidden: boolean,
-  Options: string[],
-  OnSelect: (value: string) => void
-  OnClick: () => void
+  id?: string;
+  name: string;
+  selectedValue: string;
+  dropdownHidden: boolean;
+  dropdownItems: SuggestionItem[];
+  onSelect: (value: SuggestionItem) => void;
+  onClick: () => void;
 }
 
 export default function ButtonDropdown(params: Parameters) {
   return (
     <div
-      className={`inline-block relative`}
+      className={`inline-block relative w-full`}
+      id={params.id}
     >
       <button
         type="button"
         className={`border-1 border-gray-500 py-1 px-3`}
-        onClick={params.OnClick}
+        onClick={params.onClick}
       >
-        {`${params.Name}${params.SelectedValue === "" ? "" : `: ${params.SelectedValue}`}`}
+        {`${params.name}${params.selectedValue === "" ? "" : `: ${params.selectedValue}`}`}
       </button>
       <Dropdown
-        DropdownItems={params.Options}
-        DropdownHidden={params.DropdownHidden}
-        OnSelect={params.OnSelect}
+        dropdownItems={params.dropdownItems}
+        dropdownHidden={params.dropdownHidden}
+        onSelect={params.onSelect}
       />
     </div>
   );

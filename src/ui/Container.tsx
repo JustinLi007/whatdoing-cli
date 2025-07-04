@@ -4,7 +4,7 @@ import filterSort from "../utils/filter-sort";
 import kmp from "../utils/kmp";
 
 interface Parameters {
-  Items: Content[],
+  Items: ContentTypes[],
   SearchValue: string,
   SortValue: string,
 }
@@ -12,27 +12,46 @@ interface Parameters {
 export default function Container(params: Parameters) {
   const baseItems = params.Items.slice();
 
-  let filteredItems = filterSearch<Content, string>(baseItems, params.SearchValue, (a, b) => {
+  let filteredItems = filterSearch<ContentTypes, string>(baseItems, params.SearchValue, (a, b) => {
     if (b.trim().toLowerCase() === "") {
       return true;
     }
 
-    const res = kmp(a.title.trim().toLowerCase(), b.trim().toLowerCase()) >= 0;
-    return res;
+    if (a.kind === "anime") {
+      const res = kmp(a.anime_name.name.trim().toLowerCase(), b.trim().toLowerCase()) >= 0;
+      return res;
+    }
+    return false;
   });
 
-  const asc: SortCompare<Content> = (a, b) => {
-    if (a.title < b.title) {
+  const asc: SortCompare<ContentTypes> = (a, b) => {
+    let left = "";
+    let right = "";
+    if (a.kind === "anime") {
+      left = a.anime_name.name;
+    }
+    if (b.kind === "anime") {
+      right = b.anime_name.name;
+    }
+    if (left < right) {
       return -1;
-    } else if (a.title > b.title) {
+    } else if (left > right) {
       return 1;
     }
     return 0;
   }
-  const desc: SortCompare<Content> = (a, b) => {
-    if (a.title > b.title) {
+  const desc: SortCompare<ContentTypes> = (a, b) => {
+    let left = "";
+    let right = "";
+    if (a.kind === "anime") {
+      left = a.anime_name.name;
+    }
+    if (b.kind === "anime") {
+      right = b.anime_name.name;
+    }
+    if (left > right) {
       return -1;
-    } else if (a.title < b.title) {
+    } else if (left < right) {
       return 1;
     }
     return 0;
@@ -45,17 +64,32 @@ export default function Container(params: Parameters) {
   }
 
   const elements = filteredItems.map((value) => {
-    return (
-      <Card
-        key={value.id}
-        Title={value.title}
-        Episode={value.episode}
-        Description={value.description}
-        ImageSrc={value.image_src}
-        ContentLink={value.content_link}
-      />
-    );
+    switch (value.kind) {
+      case "anime":
+        return (
+          <Card
+            key={value.id}
+            Title={value.anime_name.name}
+            Episode={value.episodes.toString()}
+            Description={value.description}
+            ImageSrc={value.image_url}
+            ContentLink={""}
+          />
+        );
+      case "manga":
+        return (
+          <Card
+            key={value.id}
+            Title={"manga not implemented"}
+            Episode={value.chapters.toString()}
+            Description={""}
+            ImageSrc={""}
+            ContentLink={""}
+          />
+        );
+    }
   })
+
 
   return (
     <div className={`flex flex-col flex-nowrap gap-2 p-2`}>

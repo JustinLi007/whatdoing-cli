@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { base_url } from "./constants";
 
 const schema = z.object({
   userId: z.string().uuid("user id required"),
@@ -10,7 +11,7 @@ export async function fetchUserById(params: UserRequest): Promise<UserResponse> 
     throw new Error(`invalid params`);
   }
 
-  const url = `http://localhost:8000/users/${params.user_id}`
+  const url = `${base_url}/users/${params.user_id}`
 
   try {
     const resp = await fetch(url, {

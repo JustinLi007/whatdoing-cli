@@ -1,9 +1,9 @@
 interface Parameters {
-  Title: string,
-  Episode: number,
-  Description: string,
-  ImageSrc: string,
-  ContentLink: string,
+  Title: string;
+  Episode: string;
+  Description: string;
+  ImageSrc: string;
+  ContentLink: string;
 }
 
 export default function Card(params: Parameters) {

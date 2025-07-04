@@ -1,20 +1,20 @@
 import { type ChangeEvent, type MouseEvent } from 'react';
 
 interface Parameters {
-  SearchValue: string,
-  OnChange: (e: ChangeEvent) => void,
-  OnClick?: (e: MouseEvent) => void,
+  searchValue: string;
+  onChange: (e: ChangeEvent) => void;
+  onClick?: (e: MouseEvent) => void;
 }
 
 export default function Search(params: Parameters) {
   return (
     <input
       type="text"
-      value={params.SearchValue}
-      onChange={(e) => { params.OnChange(e); }}
+      value={params.searchValue}
+      onChange={(e) => { params.onChange(e); }}
       onClick={(e) => {
-        if (params.OnClick) {
-          params.OnClick(e);
+        if (params.onClick) {
+          params.onClick(e);
         }
       }}
       placeholder="search"

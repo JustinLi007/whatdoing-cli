@@ -18,14 +18,20 @@ function Login() {
   const [password, setPassword] = useState("shit");
 
   function handleEmailOnChange(event: ChangeEvent) {
-    // @ts-ignore
-    const val = event.target.value;
+    const t = event.target;
+    if (!(t instanceof HTMLInputElement)) {
+      return;
+    }
+    const val = t.value;
     setEmail(val);
   }
 
   function handlePasswordOnChange(event: ChangeEvent) {
-    // @ts-ignore
-    const val = event.target.value;
+    const t = event.target;
+    if (!(t instanceof HTMLInputElement)) {
+      return;
+    }
+    const val = t.value;
     setPassword(val);
   }
 
@@ -48,7 +54,6 @@ function Login() {
 
   function handleFormSubmit(event: FormEvent) {
     event.preventDefault();
-    // @ts-ignore
     mutation.mutate({
       email: email,
       password: password,
@@ -60,22 +65,22 @@ function Login() {
       <form onSubmit={handleFormSubmit}>
         <div>
           <Input
-            Id='email'
-            Value={email}
-            Type='email'
-            Label='Email'
-            OnChange={handleEmailOnChange}
-            Required={true}
+            id='email'
+            value={email}
+            type='email'
+            label='Email'
+            onChange={handleEmailOnChange}
+            required={true}
           />
         </div>
         <div>
           <Input
-            Id='password'
-            Value={password}
-            Type='password'
-            Label='Password'
-            OnChange={handlePasswordOnChange}
-            Required={true}
+            id='password'
+            value={password}
+            type='password'
+            label='Password'
+            onChange={handlePasswordOnChange}
+            required={true}
           />
         </div>
         <div>

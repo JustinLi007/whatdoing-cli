@@ -39,7 +39,7 @@ function Contents() {
             <Card
               key={value.id}
               Title={value.anime_name.name}
-              Episode={value.episodes}
+              Episode={value.episodes.toString()}
               Description={value.description}
               ContentLink={`/contents/${value.id}`}
               ImageSrc={""}

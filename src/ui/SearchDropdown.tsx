@@ -7,21 +7,21 @@ import kmp from '../utils/kmp';
 type Parameters = {
   id?: string;
   searchValue: string;
-  dropdownItems: string[];
+  dropdownItems: SuggestionItem[];
   dropdownHidden: boolean;
   onChange: (e: ChangeEvent) => void;
   onClick: (e: MouseEvent) => void;
-  onSelect: (value: string) => void;
+  onSelect: (value: SuggestionItem) => void;
 }
 
 export default function SearchDropdown(params: Parameters) {
   const baseItems = params.dropdownItems.slice();
-  let filteredItems = filterSearch<string, string>(baseItems, params.searchValue, (a, b) => {
+  let filteredItems = filterSearch<SuggestionItem, string>(baseItems, params.searchValue, (a, b) => {
     if (b.trim().toLowerCase() === "") {
       return true;
     }
 
-    const res = kmp(a, b) >= 0;
+    const res = kmp(a.title, b) >= 0;
     return res;
   });
 
@@ -32,14 +32,14 @@ export default function SearchDropdown(params: Parameters) {
         id={params.id}
       >
         <Search
-          SearchValue={params.searchValue}
-          OnChange={params.onChange}
-          OnClick={params.onClick}
+          searchValue={params.searchValue}
+          onChange={params.onChange}
+          onClick={params.onClick}
         />
         <Dropdown
-          DropdownHidden={params.dropdownHidden}
-          DropdownItems={filteredItems}
-          OnSelect={params.onSelect}
+          dropdownHidden={params.dropdownHidden}
+          dropdownItems={filteredItems}
+          onSelect={params.onSelect}
         />
       </div>
     </>
