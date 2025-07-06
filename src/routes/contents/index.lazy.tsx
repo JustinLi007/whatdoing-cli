@@ -38,11 +38,11 @@ function Contents() {
           return (
             <Card
               key={value.id}
-              Title={value.anime_name.name}
-              Episode={value.episodes.toString()}
-              Description={value.description}
-              ContentLink={`/contents/${value.id}`}
-              ImageSrc={""}
+              title={value.anime_name.name}
+              episode={value.episodes ? value.episodes.toString() : ""}
+              description={value.description ? value.description : ""}
+              contentLink={`/contents/${value.id}`}
+              imageSrc={value.image_url ? value.image_url : ""}
             />
           );
         })}

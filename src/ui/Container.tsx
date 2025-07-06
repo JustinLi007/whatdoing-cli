@@ -69,22 +69,22 @@ export default function Container(params: Parameters) {
         return (
           <Card
             key={value.id}
-            Title={value.anime_name.name}
-            Episode={value.episodes.toString()}
-            Description={value.description}
-            ImageSrc={value.image_url}
-            ContentLink={""}
+            title={value.anime_name.name}
+            episode={value.episodes ? value.episodes.toString() : ""}
+            description={value.description ? value.description : ""}
+            imageSrc={value.image_url ? value.image_url : ""}
+            contentLink={""}
           />
         );
       case "manga":
         return (
           <Card
             key={value.id}
-            Title={"manga not implemented"}
-            Episode={value.chapters.toString()}
-            Description={""}
-            ImageSrc={""}
-            ContentLink={""}
+            title={"manga not implemented"}
+            episode={value.chapters.toString()}
+            description={""}
+            imageSrc={""}
+            contentLink={""}
           />
         );
     }

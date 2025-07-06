@@ -2,11 +2,11 @@ import { z } from "zod";
 import { base_url } from "./constants";
 
 const schema = z.object({
-  contentId: z.string().uuid("content id must be an uuid").optional(),
+  content_id: z.string().optional(),
   name: z.string().trim().min(1, "name required"),
-  contentType: z.string().trim().min(1, "content type required"),
+  content_type: z.string().trim().min(1, "content type required"),
   episodes: z.number().gt(0, "episodes cannot be less than 0").optional(),
-  imageUrl: z.string().url("image url must be a valid url").optional(),
+  image_url: z.string().url("image url must be a valid url").optional(),
   description: z.string().optional(),
 });
 

@@ -15,9 +15,9 @@ type ContentKinds = "anime" | "manga";
 
 type Anime = StructBase & {
   kind: "anime";
-  episodes: number;
-  description: string;
-  image_url: string;
+  episodes?: number;
+  description?: string;
+  image_url?: string;
   anime_name: AnimeName;
 }
 

@@ -80,6 +80,10 @@ function NewContent() {
 
     setSearchValue(val);
 
+    if (!data || contentId.trim() === "") {
+      setName(val);
+    }
+
     if (val.trim().length === 0) {
       setSearchDropdownHidden(true);
     } else {
@@ -91,9 +95,30 @@ function NewContent() {
     // TODO:
     const val = value.title;
     setSearchValue(val);
-    setName(val);
     setSearchDropdownHidden(true);
-    setContentId(value.key);
+
+    if (data) {
+      let found = -1;
+      for (let i = 0; i < data.anime_list.length; i++) {
+        const cur = data.anime_list[i];
+        if (cur.id === value.key) {
+          found = i;
+          break;
+        }
+      }
+      const item = data.anime_list[found];
+      setName(item.anime_name.name);
+      setContentId(item.id);
+      for (const v of contentTypes) {
+        if (v.kind === item.kind) {
+          setSelectedContentType(v.title);
+          break;
+        }
+      }
+      setDescription(item.description ? item.description : "");
+      setEpisodes(item.episodes ? item.episodes.toString() : "");
+      setImageUrl(item.image_url ? item.image_url : "");
+    }
   }
 
   function handleContentTypeDropdownSelection(value: SuggestionItem) {
@@ -280,11 +305,11 @@ function NewContent() {
         </form>
         <div className={`p-4`}>
           <Card
-            Title={name}
-            Episode={episodes}
-            ContentLink=""
-            Description={description}
-            ImageSrc={imageUrl}
+            title={name}
+            episode={episodes}
+            contentLink=""
+            description={description}
+            imageSrc={imageUrl}
           />
         </div>
       </div>

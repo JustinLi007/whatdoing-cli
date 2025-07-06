@@ -2,7 +2,7 @@ import { z } from "zod";
 import { base_url } from "./constants";
 
 const schema = z.object({
-  userId: z.string().uuid("user id required"),
+  user_id: z.string().uuid("user id required"),
 });
 
 export async function fetchUserById(params: UserRequest): Promise<UserResponse> {
