@@ -15,3 +15,23 @@ export function newDocClickHandler(elementId: string, cb: (value: boolean) => vo
     }
   }
 }
+
+export function toSuggestionItem(value: ContentTypes): SuggestionItem | null {
+  switch (value.kind) {
+    case "anime":
+      return {
+        key: value.id,
+        kind: "anime",
+        title: value.anime_name.name,
+        description: value.description,
+      }
+    case "manga":
+      return {
+        key: value.id,
+        kind: "anime",
+        title: "manga not implemented",
+      }
+    default:
+      return null;
+  }
+}

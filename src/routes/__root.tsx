@@ -31,6 +31,11 @@ function RootComponent() {
       name: "Login",
       path: "/login",
     },
+    {
+      id: "5",
+      name: "Data",
+      path: "/data",
+    },
   ];
 
   const [menuHidden, setMenuHidden] = useState(true);

@@ -1,19 +1,16 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
-import ButtonDropdown from '../ui/ButtonDropdown';
-import Input from '../ui/Input';
-import TextArea from '../ui/TextArea';
-import Card from '../ui/Card';
-import { FetchAllAnime, FetchCreateContent } from '../api/content';
-import SearchDropdown from '../ui/SearchDropdown';
-import { newDocClickHandler, toSuggestionItem } from '../utils/ui';
+import { FetchContent, FetchUpdateContent } from '../../api/content';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import ButtonDropdown from '../../ui/ButtonDropdown';
+import Input from '../../ui/Input';
+import Card from '../../ui/Card';
+import TextArea from '../../ui/TextArea';
 
-export const Route = createLazyFileRoute('/new-content')({
-  component: NewContent,
+export const Route = createLazyFileRoute('/edit/$contentId')({
+  component: Edit,
 })
 
-// TODO: get form server??
 const contentTypes: SuggestionItem[] = [
   {
     key: "1",
@@ -27,97 +24,42 @@ const contentTypes: SuggestionItem[] = [
   },
 ]
 
-function NewContent() {
-  const navigate = useNavigate({
-    from: "/new-content",
-  });
+function Edit() {
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate({
+    from: `/edit/$contentId`,
+  });
+  const { contentId } = Route.useParams();
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ["content_list"],
+    queryKey: ["edit", contentId],
     queryFn: async () => {
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
-      const data = await FetchAllAnime();
+      const data = await FetchContent({ content_id: contentId });
+      if (data) {
+        const content_kind = data.content.kind;
+        switch (content_kind) {
+          case "anime":
+            setName(data.content.anime_name.name);
+            setDescription(data.content.description ? data.content.description : "");
+            setEpisodes(data.content.episodes ? data.content.episodes.toString() : "");
+            setImageUrl(data.content.image_url ? data.content.image_url : "");
+            setContentNameId(data.content.anime_name.id);
+            setSelectedContentType("Anime");
+            break;
+          case 'manga':
+            break;
+        }
+      }
       return data;
     },
-    staleTime: 1000 * 60,
   });
 
   const [contentTypeDropdownHidden, setContentTypeDropdownHidden] = useState(true);
   const [selectedContentType, setSelectedContentType] = useState("");
   const [name, setName] = useState("");
-  const [contentId, setContentId] = useState("");
   const [episodes, setEpisodes] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [description, setDescription] = useState("");
-  const [searchDropdownHidden, setSearchDropdownHidden] = useState(true);
-  const [searchValue, setSearchValue] = useState("");
-
-  const handleDocClickSearch = newDocClickHandler("new-content-search-dropdown", setSearchDropdownHidden);
-  const handleDocClickContentType = newDocClickHandler("new-content-type-dropdown", setContentTypeDropdownHidden);
-
-  useEffect(() => {
-    document.addEventListener("click", handleDocClickSearch);
-    document.addEventListener("click", handleDocClickContentType);
-    return () => {
-      document.removeEventListener("click", handleDocClickSearch);
-      document.removeEventListener("click", handleDocClickContentType);
-    }
-  }, [])
-
-  function handleSearchClick() {
-    setSearchDropdownHidden(false);
-  }
-
-  function handleSearchOnChange(event: ChangeEvent) {
-    const t = event.target;
-    if (!(t instanceof HTMLInputElement)) {
-      return;
-    }
-    const val = t.value;
-
-    setSearchValue(val);
-
-    if (!data || contentId.trim() === "") {
-      setName(val);
-    }
-
-    if (val.trim().length === 0) {
-      setSearchDropdownHidden(true);
-    } else {
-      setSearchDropdownHidden(false);
-    }
-  }
-
-  function handleSearchDropdownOnSelect(value: SuggestionItem) {
-    // TODO:
-    const val = value.title;
-    setSearchValue(val);
-    setSearchDropdownHidden(true);
-
-    if (data) {
-      let found = -1;
-      for (let i = 0; i < data.anime_list.length; i++) {
-        const cur = data.anime_list[i];
-        if (cur.id === value.key) {
-          found = i;
-          break;
-        }
-      }
-      const item = data.anime_list[found];
-      setName(item.anime_name.name);
-      setContentId(item.id);
-      for (const v of contentTypes) {
-        if (v.kind === item.kind) {
-          setSelectedContentType(v.title);
-          break;
-        }
-      }
-      setDescription(item.description ? item.description : "");
-      setEpisodes(item.episodes ? item.episodes.toString() : "");
-      setImageUrl(item.image_url ? item.image_url : "");
-    }
-  }
+  const [contentNameId, setContentNameId] = useState("");
 
   function handleContentTypeDropdownSelection(value: SuggestionItem) {
     setSelectedContentType(value.title);
@@ -165,7 +107,7 @@ function NewContent() {
   }
 
   const mutation = useMutation({
-    mutationFn: FetchCreateContent,
+    mutationFn: FetchUpdateContent,
     onSuccess: (data) => {
       // Invalidate and refetch
       queryClient.invalidateQueries();
@@ -174,19 +116,19 @@ function NewContent() {
       });
     },
     onError: (err) => {
-      console.log(`error: failed to create content: ${err}`);
+      console.log(`error: failed to update content: ${err}`);
     },
   });
 
   function handleFormSubmit(event: FormEvent) {
     event.preventDefault();
     mutation.mutate({
-      name: name,
+      content_names_id: contentNameId,
       content_type: selectedContentType,
-      content_id: contentId.trim() === "" ? undefined : contentId,
-      description: description.trim() === "" ? undefined : description,
-      image_url: imageUrl.trim() === "" ? undefined : imageUrl,
-      episodes: episodes.trim() === "" ? undefined : parseInt(episodes),
+      content_id: contentId.trim(),
+      description: description.trim(),
+      image_url: imageUrl.trim(),
+      episodes: parseInt(episodes),
     });
   }
 
@@ -204,25 +146,6 @@ function NewContent() {
   return (
     <>
       <div className={`py-4`}>
-
-        <div className={`relative p-4`}>
-          <SearchDropdown
-            id={`new-content-search-dropdown`}
-            searchValue={searchValue}
-            dropdownHidden={searchDropdownHidden}
-            dropdownItems={
-              data.anime_list.map((value) => {
-                return toSuggestionItem(value);
-              }).filter((value) => {
-                return value !== null;
-              })
-            }
-            onChange={handleSearchOnChange}
-            onClick={handleSearchClick}
-            onSelect={handleSearchDropdownOnSelect}
-          />
-        </div>
-
         <form onSubmit={handleFormSubmit}>
           <div className={`flex flex-col flex-nowrap p-4 gap-4`}>
             <div className={`relative w-max`}>
