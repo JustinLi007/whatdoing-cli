@@ -1,28 +1,32 @@
 import type { ChangeEvent } from "react";
 
-interface Parameters {
+type Parameters = {
   type: string;
   id: string;
-  value: string | number;
   label: string;
-  required: boolean;
+  value?: string | number | null;
+  required?: boolean;
   disabled?: boolean;
   onChange: (event: ChangeEvent) => void;
 }
 
 export default function Input(params: Parameters) {
+  const value = params.value ? params.value : "";
+  const required = params.required ? params.required : false;
+  const disabled = params.disabled ? params.disabled : false;
+
   return (
     <>
       <label htmlFor={params.id}>{params.label}:</label>
       <input
+        className={`border-gray-500 border-1 py-1 px-3 outline-0 w-full`}
         id={params.id}
         name={params.id}
         type={params.type}
-        value={params.value}
-        className={`border-gray-500 border-1 py-1 px-3 outline-0 w-full`}
-        required={params.required}
         onChange={params.onChange}
-        disabled={params.disabled}
+        value={value}
+        required={required}
+        disabled={disabled}
       />
     </>
   );

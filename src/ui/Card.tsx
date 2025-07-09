@@ -1,16 +1,20 @@
-interface Parameters {
-  title: string;
-  episode: string;
-  description: string;
-  imageSrc: string;
-  contentLink: string;
+type Parameters = {
+  title?: string | null;
+  episode?: number | string | readonly string[] | null;
+  description?: string | null;
+  imageSrc?: string | null;
+  contentLink?: string | null;
 }
 
 export default function Card(params: Parameters) {
   let imageSrc: string | undefined = undefined;
-  if (params.imageSrc.trim() !== "") {
+  if (params.imageSrc && params.imageSrc.trim() !== "") {
     imageSrc = params.imageSrc;
   }
+  const title = params.title ? params.title : "";
+  const episode = params.episode ? params.episode : "";
+  const description = params.description ? params.description : "";
+  const contentLink = params.contentLink ? params.contentLink : "";
 
   return (
     <div className={`outline-1 outline-gray-500 border-gray-500 shadow shadow-gray-500`}>
@@ -25,18 +29,13 @@ export default function Card(params: Parameters) {
           <div className={`p-2.5 w-3/5 overflow-auto`}>
             <div className={`font-bold`}>
               <a
-                href={params.contentLink}
+                href={contentLink}
                 target="_blank"
-                className={`text-lg ${params.contentLink.trim() === "" ? "pointer-events-none" : ""}`}
-              >{params.title}
-              </a>
+                className={`text-lg ${contentLink.trim() === "" ? "pointer-events-none" : ""}`}
+              >{title}</a>
             </div>
-            <div>
-              {params.episode}
-            </div>
-            <div>
-              {params.description}
-            </div>
+            <div>{episode}</div>
+            <div>{description}</div>
           </div>
         </div>
       </div>

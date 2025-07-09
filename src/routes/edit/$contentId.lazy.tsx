@@ -192,11 +192,11 @@ function Edit() {
             </div>
             <div>
               <TextArea
-                Id="description"
-                Value={description}
-                Label="Description"
-                Required={false}
-                OnChange={handleDescriptionOnChange}
+                id="description"
+                value={description}
+                label="Description"
+                required={false}
+                onChange={handleDescriptionOnChange}
               />
             </div>
             <div>

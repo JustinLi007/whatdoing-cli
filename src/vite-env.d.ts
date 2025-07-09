@@ -17,3 +17,5 @@ type SuggestionItem = {
   link?: string;
   image?: string;
 }
+
+type SetAnimeFn = (name: string, episodes: number, image_url: string, description: string) => void
