@@ -64,11 +64,11 @@ function Data() {
   }
 
   function handleBtnClick() {
-    if (selectedItemKey.trim() === "") {
+    if (searchValue.trim() === "") {
       return;
     }
 
-    if (data) {
+    if (data && selectedItemKey.trim() !== "") {
       let found = -1;
       for (let i = 0; i < data.anime_list.length; i++) {
         const cur = data.anime_list[i];
@@ -80,6 +80,10 @@ function Data() {
       const item = data.anime_list[found];
       navigate({
         to: `/edit/${item.id}`,
+      })
+    } else {
+      navigate({
+        to: `/edit/new`,
       })
     }
   }

@@ -25,6 +25,7 @@ const DataIndexLazyImport = createFileRoute('/data/')()
 const ContentsIndexLazyImport = createFileRoute('/contents/')()
 const HomeUserIdLazyImport = createFileRoute('/home/$userId')()
 const EditContentIdLazyImport = createFileRoute('/edit/$contentId')()
+const EditNewIndexLazyImport = createFileRoute('/edit/new/')()
 
 // Create/Update Routes
 
@@ -85,6 +86,14 @@ const ContentsContentIdRoute = ContentsContentIdImport.update({
   path: '/contents/$contentId',
   getParentRoute: () => rootRoute,
 } as any)
+
+const EditNewIndexLazyRoute = EditNewIndexLazyImport.update({
+  id: '/edit/new/',
+  path: '/edit/new/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/edit/new/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -153,6 +162,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/edit/new/': {
+      id: '/edit/new/'
+      path: '/edit/new'
+      fullPath: '/edit/new'
+      preLoaderRoute: typeof EditNewIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -168,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/data': typeof DataIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
+  '/edit/new': typeof EditNewIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -180,6 +197,7 @@ export interface FileRoutesByTo {
   '/data': typeof DataIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
+  '/edit/new': typeof EditNewIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -193,6 +211,7 @@ export interface FileRoutesById {
   '/data/': typeof DataIndexLazyRoute
   '/login/': typeof LoginIndexLazyRoute
   '/signup/': typeof SignupIndexLazyRoute
+  '/edit/new/': typeof EditNewIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -207,6 +226,7 @@ export interface FileRouteTypes {
     | '/data'
     | '/login'
     | '/signup'
+    | '/edit/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -218,6 +238,7 @@ export interface FileRouteTypes {
     | '/data'
     | '/login'
     | '/signup'
+    | '/edit/new'
   id:
     | '__root__'
     | '/'
@@ -229,6 +250,7 @@ export interface FileRouteTypes {
     | '/data/'
     | '/login/'
     | '/signup/'
+    | '/edit/new/'
   fileRoutesById: FileRoutesById
 }
 
@@ -242,6 +264,7 @@ export interface RootRouteChildren {
   DataIndexLazyRoute: typeof DataIndexLazyRoute
   LoginIndexLazyRoute: typeof LoginIndexLazyRoute
   SignupIndexLazyRoute: typeof SignupIndexLazyRoute
+  EditNewIndexLazyRoute: typeof EditNewIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -254,6 +277,7 @@ const rootRouteChildren: RootRouteChildren = {
   DataIndexLazyRoute: DataIndexLazyRoute,
   LoginIndexLazyRoute: LoginIndexLazyRoute,
   SignupIndexLazyRoute: SignupIndexLazyRoute,
+  EditNewIndexLazyRoute: EditNewIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -274,7 +298,8 @@ export const routeTree = rootRoute
         "/contents/",
         "/data/",
         "/login/",
-        "/signup/"
+        "/signup/",
+        "/edit/new/"
       ]
     },
     "/": {
@@ -303,6 +328,9 @@ export const routeTree = rootRoute
     },
     "/signup/": {
       "filePath": "signup/index.lazy.tsx"
+    },
+    "/edit/new/": {
+      "filePath": "edit/new/index.lazy.tsx"
     }
   }
 }
