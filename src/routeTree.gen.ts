@@ -17,7 +17,6 @@ import { Route as ContentsContentIdImport } from './routes/contents/$contentId'
 
 // Create Virtual Routes
 
-const NewContentLazyImport = createFileRoute('/new-content')()
 const IndexLazyImport = createFileRoute('/')()
 const SignupIndexLazyImport = createFileRoute('/signup/')()
 const LoginIndexLazyImport = createFileRoute('/login/')()
@@ -28,12 +27,6 @@ const EditContentIdLazyImport = createFileRoute('/edit/$contentId')()
 const EditNewIndexLazyImport = createFileRoute('/edit/new/')()
 
 // Create/Update Routes
-
-const NewContentLazyRoute = NewContentLazyImport.update({
-  id: '/new-content',
-  path: '/new-content',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/new-content.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
@@ -106,13 +99,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/new-content': {
-      id: '/new-content'
-      path: '/new-content'
-      fullPath: '/new-content'
-      preLoaderRoute: typeof NewContentLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/contents/$contentId': {
       id: '/contents/$contentId'
       path: '/contents/$contentId'
@@ -176,7 +162,6 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
-  '/new-content': typeof NewContentLazyRoute
   '/contents/$contentId': typeof ContentsContentIdRoute
   '/edit/$contentId': typeof EditContentIdLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
@@ -189,7 +174,6 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
-  '/new-content': typeof NewContentLazyRoute
   '/contents/$contentId': typeof ContentsContentIdRoute
   '/edit/$contentId': typeof EditContentIdLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
@@ -203,7 +187,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
-  '/new-content': typeof NewContentLazyRoute
   '/contents/$contentId': typeof ContentsContentIdRoute
   '/edit/$contentId': typeof EditContentIdLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
@@ -218,7 +201,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/new-content'
     | '/contents/$contentId'
     | '/edit/$contentId'
     | '/home/$userId'
@@ -230,7 +212,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/new-content'
     | '/contents/$contentId'
     | '/edit/$contentId'
     | '/home/$userId'
@@ -242,7 +223,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/new-content'
     | '/contents/$contentId'
     | '/edit/$contentId'
     | '/home/$userId'
@@ -256,7 +236,6 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
-  NewContentLazyRoute: typeof NewContentLazyRoute
   ContentsContentIdRoute: typeof ContentsContentIdRoute
   EditContentIdLazyRoute: typeof EditContentIdLazyRoute
   HomeUserIdLazyRoute: typeof HomeUserIdLazyRoute
@@ -269,7 +248,6 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
-  NewContentLazyRoute: NewContentLazyRoute,
   ContentsContentIdRoute: ContentsContentIdRoute,
   EditContentIdLazyRoute: EditContentIdLazyRoute,
   HomeUserIdLazyRoute: HomeUserIdLazyRoute,
@@ -291,7 +269,6 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/new-content",
         "/contents/$contentId",
         "/edit/$contentId",
         "/home/$userId",
@@ -304,9 +281,6 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.lazy.tsx"
-    },
-    "/new-content": {
-      "filePath": "new-content.lazy.tsx"
     },
     "/contents/$contentId": {
       "filePath": "contents/$contentId.tsx"
