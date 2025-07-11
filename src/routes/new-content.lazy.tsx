@@ -1,13 +1,10 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import ButtonDropdown from '../ui/ButtonDropdown';
-import Input from '../ui/Input';
-import TextArea from '../ui/TextArea';
-import Card from '../ui/Card';
 import { FetchAllAnime, FetchCreateContent } from '../api/content';
-import SearchDropdown from '../ui/SearchDropdown';
-import { newDocClickHandler, toSuggestionItem } from '../utils/ui';
+import { newDocClickHandler } from '../utils/ui';
+import FormAnimeAdd from '../ui/FormAnimeAdd';
 
 export const Route = createLazyFileRoute('/new-content')({
   component: NewContent,
@@ -18,12 +15,12 @@ const contentTypes: SuggestionItem[] = [
   {
     key: "1",
     kind: "anime",
-    title: "Anime",
+    title: "anime",
   },
   {
     key: "2",
     kind: "manga",
-    title: "Manga",
+    title: "manga",
   },
 ]
 
@@ -33,6 +30,7 @@ function NewContent() {
   });
   const queryClient = useQueryClient();
 
+  // FIX: need new endpoint for names only.
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["content_list"],
     queryFn: async () => {
@@ -44,80 +42,16 @@ function NewContent() {
   });
 
   const [contentTypeDropdownHidden, setContentTypeDropdownHidden] = useState(true);
-  const [selectedContentType, setSelectedContentType] = useState("");
-  const [name, setName] = useState("");
-  const [contentId, setContentId] = useState("");
-  const [episodes, setEpisodes] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [description, setDescription] = useState("");
-  const [searchDropdownHidden, setSearchDropdownHidden] = useState(true);
-  const [searchValue, setSearchValue] = useState("");
+  const [selectedContentType, setSelectedContentType] = useState<ContentKinds>("anime");
 
-  const handleDocClickSearch = newDocClickHandler("new-content-search-dropdown", setSearchDropdownHidden);
   const handleDocClickContentType = newDocClickHandler("new-content-type-dropdown", setContentTypeDropdownHidden);
 
   useEffect(() => {
-    document.addEventListener("click", handleDocClickSearch);
     document.addEventListener("click", handleDocClickContentType);
     return () => {
-      document.removeEventListener("click", handleDocClickSearch);
       document.removeEventListener("click", handleDocClickContentType);
     }
   }, [])
-
-  function handleSearchClick() {
-    setSearchDropdownHidden(false);
-  }
-
-  function handleSearchOnChange(event: ChangeEvent) {
-    const t = event.target;
-    if (!(t instanceof HTMLInputElement)) {
-      return;
-    }
-    const val = t.value;
-
-    setSearchValue(val);
-
-    if (!data || contentId.trim() === "") {
-      setName(val);
-    }
-
-    if (val.trim().length === 0) {
-      setSearchDropdownHidden(true);
-    } else {
-      setSearchDropdownHidden(false);
-    }
-  }
-
-  function handleSearchDropdownOnSelect(value: SuggestionItem) {
-    // TODO:
-    const val = value.title;
-    setSearchValue(val);
-    setSearchDropdownHidden(true);
-
-    if (data) {
-      let found = -1;
-      for (let i = 0; i < data.anime_list.length; i++) {
-        const cur = data.anime_list[i];
-        if (cur.id === value.key) {
-          found = i;
-          break;
-        }
-      }
-      const item = data.anime_list[found];
-      setName(item.anime_name.name);
-      setContentId(item.id);
-      for (const v of contentTypes) {
-        if (v.kind === item.kind) {
-          setSelectedContentType(v.title);
-          break;
-        }
-      }
-      setDescription(item.description ? item.description : "");
-      setEpisodes(item.episodes ? item.episodes.toString() : "");
-      setImageUrl(item.image_url ? item.image_url : "");
-    }
-  }
 
   function handleContentTypeDropdownSelection(value: SuggestionItem) {
     setSelectedContentType(value.title);
@@ -128,65 +62,27 @@ function NewContent() {
     setContentTypeDropdownHidden(!contentTypeDropdownHidden);
   }
 
-  function handleNameOnChange(event: ChangeEvent) {
-    const t = event.target;
-    if (!(t instanceof HTMLInputElement)) {
-      return;
-    }
-    const val = t.value;
-    setName(val);
-  }
-
-  function handleEpisodesOnChange(event: ChangeEvent) {
-    const t = event.target;
-    if (!(t instanceof HTMLInputElement)) {
-      return;
-    }
-    const val = t.value;
-    setEpisodes(val);
-  }
-
-  function handleImageUrlOnChange(event: ChangeEvent) {
-    const t = event.target;
-    if (!(t instanceof HTMLInputElement)) {
-      return;
-    }
-    const val = t.value;
-    setImageUrl(val);
-  }
-
-  function handleDescriptionOnChange(event: ChangeEvent) {
-    const t = event.target;
-    if (!(t instanceof HTMLTextAreaElement)) {
-      return;
-    }
-    const val = t.value;
-    setDescription(val);
-  }
-
-  const mutation = useMutation({
+  const mutationAnime = useMutation({
     mutationFn: FetchCreateContent,
-    onSuccess: (data) => {
-      // Invalidate and refetch
+    onSuccess(data) {
       queryClient.invalidateQueries();
       navigate({
-        to: `${data.next}`,
-      });
+        to: data.next,
+      })
     },
-    onError: (err) => {
-      console.log(`error: failed to create content: ${err}`);
+    onError(error) {
+      console.log(`error: failed to create anime entry: ${error}`);
     },
-  });
-
-  function handleFormSubmit(event: FormEvent) {
+  })
+  function handleOnSubmitAnime(event: FormEvent, params: CreateAnimeRequest) {
     event.preventDefault();
-    mutation.mutate({
-      name: name,
-      content_type: selectedContentType,
-      content_id: contentId.trim() === "" ? undefined : contentId,
-      description: description.trim() === "" ? undefined : description,
-      image_url: imageUrl.trim() === "" ? undefined : imageUrl,
-      episodes: episodes.trim() === "" ? undefined : parseInt(episodes),
+    mutationAnime.mutate({
+      content_type: params.content_type,
+      name: params.name,
+      content_id: params.content_id,
+      description: params.description,
+      episodes: params.episodes,
+      image_url: params.image_url,
     });
   }
 
@@ -201,96 +97,41 @@ function NewContent() {
     );
   }
 
+  function getForm(content_type: ContentKinds) {
+    switch (content_type) {
+      case "anime":
+        return (
+          <FormAnimeAdd
+            submitFn={handleOnSubmitAnime}
+          />
+        );
+      case "manga":
+        return (
+          <div>
+            {content_type} not implemented.
+          </div>
+        );
+      default:
+        return <div></div>
+    }
+  }
+
   return (
     <>
-      <div className={`py-4`}>
-
-        <div className={`relative p-4`}>
-          <SearchDropdown
-            id={`new-content-search-dropdown`}
-            searchValue={searchValue}
-            dropdownHidden={searchDropdownHidden}
-            dropdownItems={
-              data.anime_list.map((value) => {
-                return toSuggestionItem(value);
-              }).filter((value) => {
-                return value !== null;
-              })
-            }
-            onChange={handleSearchOnChange}
-            onClick={handleSearchClick}
-            onSelect={handleSearchDropdownOnSelect}
-          />
-        </div>
-
-        <form onSubmit={handleFormSubmit}>
-          <div className={`flex flex-col flex-nowrap p-4 gap-4`}>
-            <div className={`relative w-max`}>
-              <ButtonDropdown
-                id={`new-content-type-dropdown`}
-                name={`Content Type`}
-                dropdownHidden={contentTypeDropdownHidden}
-                selectedValue={selectedContentType}
-                onClick={handleContentTypeDropdownToggle}
-                onSelect={handleContentTypeDropdownSelection}
-                dropdownItems={contentTypes}
-              />
-            </div>
-            <div>
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                label="Name"
-                required={true}
-                onChange={handleNameOnChange}
-                disabled={true}
-              />
-            </div>
-            <div>
-              <Input
-                id="episodes"
-                type="number"
-                value={episodes}
-                label="Episodes"
-                required={false}
-                onChange={handleEpisodesOnChange}
-              />
-            </div>
-            <div>
-              <Input
-                id="image"
-                type="url"
-                value={imageUrl}
-                label="Image Url"
-                required={false}
-                onChange={handleImageUrlOnChange}
-              />
-            </div>
-            <div>
-              <TextArea
-                id="description"
-                value={description}
-                label="Description"
-                required={false}
-                onChange={handleDescriptionOnChange}
-              />
-            </div>
-            <div>
-              <button type="submit" className={`border-1 border-gray-500 mt-4 p-3 w-full active:bg-gray-500`}>Submit Entry</button>
-            </div>
-          </div>
-        </form>
-        <div className={`p-4`}>
-          <Card
-            title={name}
-            episode={episodes}
-            contentLink=""
-            description={description}
-            imageSrc={imageUrl}
+      <div className={`px-4`}>
+        <div className={`relative w-max`}>
+          <ButtonDropdown
+            id={`new-content-type-dropdown`}
+            name={`Content Type`}
+            dropdownHidden={contentTypeDropdownHidden}
+            selectedValue={selectedContentType}
+            onClick={handleContentTypeDropdownToggle}
+            onSelect={handleContentTypeDropdownSelection}
+            dropdownItems={contentTypes}
           />
         </div>
       </div>
+      {getForm(selectedContentType)}
     </>
   );
 }

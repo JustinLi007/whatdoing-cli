@@ -19,7 +19,7 @@ function RootComponent() {
     {
       id: "2",
       name: "New Content",
-      path: "/new-content",
+      path: "/edit/new",
     },
     {
       id: "3",
@@ -53,12 +53,12 @@ function RootComponent() {
             BtnOnClick={handleBtnClick}
           />
           <div
-            className={`absolute left-0 right-0 top-auto bottom-auto`}
+            className={`absolute left-0 right-0 top-auto bottom-auto bg-neutral-700 z-10`}
           >
             <Menu
-              MenuItems={menuItems}
-              MenuHidden={menuHidden}
-              OnClick={handleBtnClick}
+              menuItems={menuItems}
+              menuHidden={menuHidden}
+              onClick={handleBtnClick}
             />
           </div>
         </header>

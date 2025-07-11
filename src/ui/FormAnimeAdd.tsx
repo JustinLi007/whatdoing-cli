@@ -5,8 +5,7 @@ import TextArea from "./TextArea";
 
 
 type Parameters = {
-  setFn: SetAnimeFn;
-  submitFn: (event: FormEvent) => void;
+  submitFn: (event: FormEvent, params: CreateAnimeRequest) => void;
   contentType?: string;
   name?: string;
   episodes?: number;
@@ -61,10 +60,34 @@ export default function FormAnimeAdd(params: Parameters) {
   return (
     <>
       <div className={`py-4`}>
-        <div>
+        <div className={`p-4`}>
           Type: {contentType}
         </div>
-        <form onSubmit={params.submitFn}>
+        <form onSubmit={
+          (event) => {
+            event.preventDefault();
+            if (!name || !contentType) {
+              return;
+            }
+
+            const reqEntry: CreateAnimeRequest = {
+              name: name,
+              content_type: contentType,
+            }
+
+            if (description) {
+              reqEntry.description = description;
+            }
+            if (episodes) {
+              reqEntry.episodes = episodes;
+            }
+            if (imageUrl) {
+              reqEntry.image_url = imageUrl;
+            }
+
+            params.submitFn(event, reqEntry);
+          }
+        }>
           <div className={`flex flex-col flex-nowrap p-4 gap-4`}>
             <div>
               <Input

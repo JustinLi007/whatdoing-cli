@@ -21,6 +21,16 @@ type UserResponse = {
   user: User;
 }
 
+type CreateAnimeRequest = {
+  content_type: string;
+  name: string;
+  content_id?: string;
+  episodes?: number;
+  description?: string;
+  image_url?: string;
+}
+type CreateAnimeResponse = WithNext & {}
+
 type CreateContentRequest = {
   name: string;
   content_type: string;
