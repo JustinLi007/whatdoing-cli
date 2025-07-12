@@ -102,7 +102,7 @@ function EditNew() {
       case "anime":
         return (
           <FormAnimeAdd
-            submitFn={handleOnSubmitAnime}
+            submit_fn={handleOnSubmitAnime}
           />
         );
       case "manga":

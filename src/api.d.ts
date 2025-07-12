@@ -53,6 +53,16 @@ type GetContentResponse = {
   content: ContentTypes;
 }
 
+type UpdateAnimeRequest = {
+  content_id: string;
+  content_names_id: string;
+  content_type: string;
+  description: string;
+  image_url: string;
+  episodes: number;
+}
+type UpdateAnimeResponse = WithNext & {}
+
 type UpdateContentRequest = {
   content_id: string;
   content_names_id: string;

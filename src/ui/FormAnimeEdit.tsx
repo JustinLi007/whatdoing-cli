@@ -4,20 +4,23 @@ import Input from "./Input";
 import TextArea from "./TextArea";
 
 type Parameters = {
-  submit_fn: (event: FormEvent, params: CreateAnimeRequest) => void;
-  content_type?: string;
-  name?: string;
-  episodes?: number;
-  image_url?: string;
-  description?: string;
+  submit_fn: (event: FormEvent, params: UpdateAnimeRequest) => void;
+  content_type: string;
+  name: string;
+  anime_id: string;
+  episodes: number;
+  image_url: string;
+  description: string;
+  alt_names: AnimeName[];
 }
 
-export default function FormAnimeAdd(params: Parameters) {
-  const content_type = params.content_type ? params.content_type : "Anime";
-  const [name, setName] = useState<string | null>(params.name ? params.name : null);
-  const [episodes, setEpisodes] = useState<number | null>(params.episodes ? params.episodes : null);
-  const [image_url, setImageUrl] = useState<string | null>(params.image_url ? params.image_url : null);
-  const [description, setDescription] = useState<string | null>(params.description ? params.description : null);
+export default function FormAnimeEdit(params: Parameters) {
+  const content_type = params.content_type;
+  const anime_id = params.anime_id;
+  const [name, setName] = useState<string>(params.name);
+  const [episodes, setEpisodes] = useState<number>(params.episodes);
+  const [image_url, setImageUrl] = useState<string>(params.image_url);
+  const [description, setDescription] = useState<string>(params.description);
 
   function handleNameOnChange(event: ChangeEvent) {
     const t = event.target;
@@ -56,6 +59,17 @@ export default function FormAnimeAdd(params: Parameters) {
     setDescription(val);
   }
 
+  function getNameId(target_name: string) {
+    let result = "";
+    for (const name of params.alt_names) {
+      if (name.name === target_name) {
+        result = name.id;
+        break;
+      }
+    }
+    return result;
+  }
+
   return (
     <>
       <div className={`py-4`}>
@@ -65,23 +79,14 @@ export default function FormAnimeAdd(params: Parameters) {
         <form onSubmit={
           (event) => {
             event.preventDefault();
-            if (!name || !content_type) {
-              return;
-            }
 
-            const reqEntry: CreateAnimeRequest = {
-              name: name,
+            const reqEntry: UpdateAnimeRequest = {
               content_type: content_type,
-            }
-
-            if (description) {
-              reqEntry.description = description;
-            }
-            if (episodes) {
-              reqEntry.episodes = episodes;
-            }
-            if (image_url) {
-              reqEntry.image_url = image_url;
+              content_id: anime_id,
+              content_names_id: getNameId(name),
+              description: description,
+              episodes: episodes,
+              image_url: image_url,
             }
 
             params.submit_fn(event, reqEntry);
@@ -95,7 +100,11 @@ export default function FormAnimeAdd(params: Parameters) {
                 value={name}
                 label="Name"
                 onChange={handleNameOnChange}
+                disabled={true}
               />
+              <div>
+                section for alt names...
+              </div>
             </div>
             <div>
               <Input

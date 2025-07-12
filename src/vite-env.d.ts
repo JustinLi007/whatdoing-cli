@@ -17,5 +17,3 @@ type SuggestionItem = {
   link?: string;
   image?: string;
 }
-
-type SetAnimeFn = (params: CreateAnimeRequest) => void;
