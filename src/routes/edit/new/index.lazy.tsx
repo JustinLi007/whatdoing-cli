@@ -1,14 +1,17 @@
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { FetchAllAnime, FetchCreateContent } from '../../../api/content';
+import { FetchCreateContent } from '../../../api/content';
 import { newDocClickHandler } from '../../../utils/ui';
 import ButtonDropdown from '../../../ui/ButtonDropdown';
 import FormAnimeAdd from '../../../ui/FormAnimeAdd';
+import { FetchAllAnime } from '../../../api/anime';
 
 export const Route = createLazyFileRoute('/edit/new/')({
   component: EditNew,
 })
+
+// FIX: this page is all kinds of fked up.
 
 // TODO: get form server??
 const contentTypes: SuggestionItem[] = [
@@ -30,7 +33,6 @@ function EditNew() {
   });
   const queryClient = useQueryClient();
 
-  // FIX: need new endpoint for names only.
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["content_list"],
     queryFn: async () => {

@@ -2,6 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import Card from "./Card";
 import Input from "./Input";
 import TextArea from "./TextArea";
+import InputTable from "./InputTable";
 
 type Parameters = {
   submit_fn: (event: FormEvent, params: UpdateAnimeRequest) => void;
@@ -83,6 +84,10 @@ export default function FormAnimeEdit(params: Parameters) {
     return result;
   }
 
+  function handleTableInputRetrieve(input_values: string[]) {
+    set_new_alt_names(input_values);
+  }
+
   return (
     <>
       <div className={`py-4`}>
@@ -100,6 +105,7 @@ export default function FormAnimeEdit(params: Parameters) {
               description: description,
               episodes: episodes,
               image_url: image_url,
+              alternative_names: new_alt_names,
             }
 
             params.submit_fn(event, reqEntry);
@@ -129,6 +135,12 @@ export default function FormAnimeEdit(params: Parameters) {
                     >{name.name}</div>
                   );
                 })}
+              </div>
+              <div>
+                <InputTable
+                  title="Alternative Names"
+                  retrieve_fn={handleTableInputRetrieve}
+                />
               </div>
             </div>
             <div>

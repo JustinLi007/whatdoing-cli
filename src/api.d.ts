@@ -60,6 +60,7 @@ type UpdateAnimeRequest = {
   description: string;
   image_url: string;
   episodes: number;
+  alternative_names: string[];
 }
 type UpdateAnimeResponse = WithNext & {}
 
@@ -73,10 +74,3 @@ type UpdateContentRequest = {
 }
 
 type UpdateContentResponse = WithNext & {}
-
-type NamesByAnimeRequest = {
-  anime_id: string;
-}
-type NamesByAnimeResponse = {
-  anime_names: AnimeName[];
-}

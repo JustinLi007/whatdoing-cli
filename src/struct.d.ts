@@ -19,6 +19,7 @@ type Anime = StructBase & {
   description?: string;
   image_url?: string;
   anime_name: AnimeName;
+  alternative_names: AnimeName[];
 }
 
 type AnimeName = StructBase & {
@@ -28,4 +29,9 @@ type AnimeName = StructBase & {
 type Manga = StructBase & {
   kind: "manga";
   chapters: number;
+}
+
+type RelAnimeAnimeNames = StructBase & {
+  anime_id: string;
+  anime_name: AnimeName;
 }

@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
-import { FetchContent, FetchUpdateContent } from '../../api/content';
 import FormAnimeEdit from '../../ui/FormAnimeEdit';
 import type { FormEvent } from 'react';
-import { FetchNamesByAnime } from '../../api/anime';
+import { FetchAnimeById, FetchUpdateAnime } from '../../api/anime';
 
 export const Route = createLazyFileRoute('/edit/$contentId')({
   component: Edit,
@@ -18,21 +17,13 @@ function Edit() {
   const { isPending: isPendingFetchContent, isError: isErrorFetchContent, data: dataFetchContent, error: errorFetchContent } = useQuery({
     queryKey: ["edit", "content", contentId],
     queryFn: async () => {
-      const data = await FetchContent({ content_id: contentId });
-      return data;
-    },
-  });
-
-  const { isPending: isPendingNames, isError: isErrorNames, data: dataNames, error: errorNames } = useQuery({
-    queryKey: ["edit", "names", contentId],
-    queryFn: async () => {
-      const data = await FetchNamesByAnime({ anime_id: contentId });
+      const data = await FetchAnimeById({ content_id: contentId });
       return data;
     },
   });
 
   const mutationAnime = useMutation({
-    mutationFn: FetchUpdateContent,
+    mutationFn: FetchUpdateAnime,
     onSuccess(data) {
       queryClient.invalidateQueries();
       navigate({
@@ -46,17 +37,16 @@ function Edit() {
 
   function handleOnSubmitAnime(event: FormEvent, params: UpdateAnimeRequest) {
     event.preventDefault();
-    console.log(params);
 
-    // mutationAnime.mutate({
-    //   content_id: params.content_id,
-    //   content_names_id: params.content_names_id,
-    //   content_type: params.content_type,
-    //   description: params.description,
-    //   episodes: params.episodes,
-    //   image_url: params.image_url,
-    // });
-
+    mutationAnime.mutate({
+      content_id: params.content_id,
+      content_names_id: params.content_names_id,
+      content_type: params.content_type,
+      description: params.description,
+      episodes: params.episodes,
+      image_url: params.image_url,
+      alternative_names: params.alternative_names,
+    });
   }
 
   if (isPendingFetchContent) {
@@ -70,27 +60,12 @@ function Edit() {
     );
   }
 
-  if (isPendingNames) {
-    return (
-      <div>Loading...</div>
-    );
-  }
-  if (isErrorNames) {
-    return (
-      <div>Something went wrong...{errorNames.message}</div>
-    );
-  }
-
   function getForm(content_data: GetContentResponse) {
     const content_kind = content_data.content.kind;
 
     switch (content_kind) {
       case "anime":
         const anime = content_data.content;
-        let alt_names: AnimeName[] = [];
-        if (dataNames) {
-          alt_names = dataNames.anime_names.slice();
-        }
         return (
           <FormAnimeEdit
             content_type={content_kind}
@@ -100,7 +75,7 @@ function Edit() {
             episodes={anime.episodes ? anime.episodes : 0}
             image_url={anime.image_url ? anime.image_url : ""}
             submit_fn={handleOnSubmitAnime}
-            alt_names={alt_names}
+            alt_names={anime.alternative_names}
           />
         );
       case "manga":

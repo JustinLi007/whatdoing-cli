@@ -1,9 +1,9 @@
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
-import { FetchAllAnime } from '../../api/content';
 import { useQuery } from '@tanstack/react-query';
 import SearchDropdown from '../../ui/SearchDropdown';
 import { newDocClickHandler, toSuggestionItem } from '../../utils/ui';
 import { useEffect, useState, type ChangeEvent } from 'react';
+import { FetchAllAnime } from '../../api/anime';
 
 export const Route = createLazyFileRoute('/data/')({
   component: Data,
@@ -20,7 +20,6 @@ function Data() {
       const data = await FetchAllAnime();
       return data;
     },
-    staleTime: 1000 * 60,
   });
 
   const [searchDropdownHidden, setSearchDropdownHidden] = useState(true);
