@@ -18,6 +18,8 @@ export default function FormAnimeEdit(params: Parameters) {
   const content_type = params.content_type;
   const anime_id = params.anime_id;
   const [name, setName] = useState<string>(params.name);
+  const [new_alt_names, set_new_alt_names] = useState<string[]>([]);
+  const [name_id, setNameId] = useState<string>(getNameId(params.name));
   const [episodes, setEpisodes] = useState<number>(params.episodes);
   const [image_url, setImageUrl] = useState<string>(params.image_url);
   const [description, setDescription] = useState<string>(params.description);
@@ -70,6 +72,17 @@ export default function FormAnimeEdit(params: Parameters) {
     return result;
   }
 
+  function getName(target_id: string) {
+    let result = "";
+    for (const name of params.alt_names) {
+      if (name.id === target_id) {
+        result = name.name;
+        break;
+      }
+    }
+    return result;
+  }
+
   return (
     <>
       <div className={`py-4`}>
@@ -83,7 +96,7 @@ export default function FormAnimeEdit(params: Parameters) {
             const reqEntry: UpdateAnimeRequest = {
               content_type: content_type,
               content_id: anime_id,
-              content_names_id: getNameId(name),
+              content_names_id: name_id,
               description: description,
               episodes: episodes,
               image_url: image_url,
@@ -103,7 +116,19 @@ export default function FormAnimeEdit(params: Parameters) {
                 disabled={true}
               />
               <div>
-                section for alt names...
+                {params.alt_names.map((name) => {
+                  // TODO: set name id on click and set name base on selection.
+                  return (
+                    <div
+                      key={name.id}
+                      onClick={() => {
+                        console.log(name_id);
+                        setNameId(name.id);
+                        setName(getName(name.id));
+                      }}
+                    >{name.name}</div>
+                  );
+                })}
               </div>
             </div>
             <div>

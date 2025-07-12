@@ -3,6 +3,7 @@ import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
 import { FetchContent, FetchUpdateContent } from '../../api/content';
 import FormAnimeEdit from '../../ui/FormAnimeEdit';
 import type { FormEvent } from 'react';
+import { FetchNamesByAnime } from '../../api/anime';
 
 export const Route = createLazyFileRoute('/edit/$contentId')({
   component: Edit,
@@ -14,15 +15,21 @@ function Edit() {
     from: `/edit/$contentId`,
   });
   const { contentId } = Route.useParams();
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: ["edit", contentId],
+  const { isPending: isPendingFetchContent, isError: isErrorFetchContent, data: dataFetchContent, error: errorFetchContent } = useQuery({
+    queryKey: ["edit", "content", contentId],
     queryFn: async () => {
       const data = await FetchContent({ content_id: contentId });
       return data;
     },
   });
 
-  // TODO: fetch all names.
+  const { isPending: isPendingNames, isError: isErrorNames, data: dataNames, error: errorNames } = useQuery({
+    queryKey: ["edit", "names", contentId],
+    queryFn: async () => {
+      const data = await FetchNamesByAnime({ anime_id: contentId });
+      return data;
+    },
+  });
 
   const mutationAnime = useMutation({
     mutationFn: FetchUpdateContent,
@@ -52,14 +59,25 @@ function Edit() {
 
   }
 
-  if (isPending) {
+  if (isPendingFetchContent) {
     return (
       <div>Loading...</div>
     );
   }
-  if (isError) {
+  if (isErrorFetchContent) {
     return (
-      <div>Something went wrong...{error.message}</div>
+      <div>Something went wrong...{errorFetchContent.message}</div>
+    );
+  }
+
+  if (isPendingNames) {
+    return (
+      <div>Loading...</div>
+    );
+  }
+  if (isErrorNames) {
+    return (
+      <div>Something went wrong...{errorNames.message}</div>
     );
   }
 
@@ -69,6 +87,10 @@ function Edit() {
     switch (content_kind) {
       case "anime":
         const anime = content_data.content;
+        let alt_names: AnimeName[] = [];
+        if (dataNames) {
+          alt_names = dataNames.anime_names.slice();
+        }
         return (
           <FormAnimeEdit
             content_type={content_kind}
@@ -78,7 +100,7 @@ function Edit() {
             episodes={anime.episodes ? anime.episodes : 0}
             image_url={anime.image_url ? anime.image_url : ""}
             submit_fn={handleOnSubmitAnime}
-            alt_names={[]}
+            alt_names={alt_names}
           />
         );
       case "manga":
@@ -95,7 +117,7 @@ function Edit() {
   return (
     <>
       <div className={``}>
-        {getForm(data)}
+        {getForm(dataFetchContent)}
       </div>
     </>
   );

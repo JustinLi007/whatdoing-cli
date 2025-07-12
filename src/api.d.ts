@@ -73,3 +73,10 @@ type UpdateContentRequest = {
 }
 
 type UpdateContentResponse = WithNext & {}
+
+type NamesByAnimeRequest = {
+  anime_id: string;
+}
+type NamesByAnimeResponse = {
+  anime_names: AnimeName[];
+}
