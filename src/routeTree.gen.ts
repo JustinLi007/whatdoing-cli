@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as EditIndexImport } from './routes/edit/index'
 import { Route as ContentsContentIdImport } from './routes/contents/$contentId'
 
 // Create Virtual Routes
@@ -25,6 +26,7 @@ const ContentsIndexLazyImport = createFileRoute('/contents/')()
 const HomeUserIdLazyImport = createFileRoute('/home/$userId')()
 const EditContentIdLazyImport = createFileRoute('/edit/$contentId')()
 const EditNewIndexLazyImport = createFileRoute('/edit/new/')()
+const EditAnimeAnimeIdLazyImport = createFileRoute('/edit/anime/$animeId')()
 
 // Create/Update Routes
 
@@ -60,6 +62,12 @@ const ContentsIndexLazyRoute = ContentsIndexLazyImport.update({
   import('./routes/contents/index.lazy').then((d) => d.Route),
 )
 
+const EditIndexRoute = EditIndexImport.update({
+  id: '/edit/',
+  path: '/edit/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const HomeUserIdLazyRoute = HomeUserIdLazyImport.update({
   id: '/home/$userId',
   path: '/home/$userId',
@@ -86,6 +94,14 @@ const EditNewIndexLazyRoute = EditNewIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/edit/new/index.lazy').then((d) => d.Route),
+)
+
+const EditAnimeAnimeIdLazyRoute = EditAnimeAnimeIdLazyImport.update({
+  id: '/edit/anime/$animeId',
+  path: '/edit/anime/$animeId',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/edit/anime/$animeId.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -120,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeUserIdLazyImport
       parentRoute: typeof rootRoute
     }
+    '/edit/': {
+      id: '/edit/'
+      path: '/edit'
+      fullPath: '/edit'
+      preLoaderRoute: typeof EditIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/contents/': {
       id: '/contents/'
       path: '/contents'
@@ -148,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/edit/anime/$animeId': {
+      id: '/edit/anime/$animeId'
+      path: '/edit/anime/$animeId'
+      fullPath: '/edit/anime/$animeId'
+      preLoaderRoute: typeof EditAnimeAnimeIdLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/edit/new/': {
       id: '/edit/new/'
       path: '/edit/new'
@@ -165,10 +195,12 @@ export interface FileRoutesByFullPath {
   '/contents/$contentId': typeof ContentsContentIdRoute
   '/edit/$contentId': typeof EditContentIdLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
+  '/edit': typeof EditIndexRoute
   '/contents': typeof ContentsIndexLazyRoute
   '/data': typeof DataIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
+  '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
   '/edit/new': typeof EditNewIndexLazyRoute
 }
 
@@ -177,10 +209,12 @@ export interface FileRoutesByTo {
   '/contents/$contentId': typeof ContentsContentIdRoute
   '/edit/$contentId': typeof EditContentIdLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
+  '/edit': typeof EditIndexRoute
   '/contents': typeof ContentsIndexLazyRoute
   '/data': typeof DataIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
+  '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
   '/edit/new': typeof EditNewIndexLazyRoute
 }
 
@@ -190,10 +224,12 @@ export interface FileRoutesById {
   '/contents/$contentId': typeof ContentsContentIdRoute
   '/edit/$contentId': typeof EditContentIdLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
+  '/edit/': typeof EditIndexRoute
   '/contents/': typeof ContentsIndexLazyRoute
   '/data/': typeof DataIndexLazyRoute
   '/login/': typeof LoginIndexLazyRoute
   '/signup/': typeof SignupIndexLazyRoute
+  '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
   '/edit/new/': typeof EditNewIndexLazyRoute
 }
 
@@ -204,10 +240,12 @@ export interface FileRouteTypes {
     | '/contents/$contentId'
     | '/edit/$contentId'
     | '/home/$userId'
+    | '/edit'
     | '/contents'
     | '/data'
     | '/login'
     | '/signup'
+    | '/edit/anime/$animeId'
     | '/edit/new'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -215,10 +253,12 @@ export interface FileRouteTypes {
     | '/contents/$contentId'
     | '/edit/$contentId'
     | '/home/$userId'
+    | '/edit'
     | '/contents'
     | '/data'
     | '/login'
     | '/signup'
+    | '/edit/anime/$animeId'
     | '/edit/new'
   id:
     | '__root__'
@@ -226,10 +266,12 @@ export interface FileRouteTypes {
     | '/contents/$contentId'
     | '/edit/$contentId'
     | '/home/$userId'
+    | '/edit/'
     | '/contents/'
     | '/data/'
     | '/login/'
     | '/signup/'
+    | '/edit/anime/$animeId'
     | '/edit/new/'
   fileRoutesById: FileRoutesById
 }
@@ -239,10 +281,12 @@ export interface RootRouteChildren {
   ContentsContentIdRoute: typeof ContentsContentIdRoute
   EditContentIdLazyRoute: typeof EditContentIdLazyRoute
   HomeUserIdLazyRoute: typeof HomeUserIdLazyRoute
+  EditIndexRoute: typeof EditIndexRoute
   ContentsIndexLazyRoute: typeof ContentsIndexLazyRoute
   DataIndexLazyRoute: typeof DataIndexLazyRoute
   LoginIndexLazyRoute: typeof LoginIndexLazyRoute
   SignupIndexLazyRoute: typeof SignupIndexLazyRoute
+  EditAnimeAnimeIdLazyRoute: typeof EditAnimeAnimeIdLazyRoute
   EditNewIndexLazyRoute: typeof EditNewIndexLazyRoute
 }
 
@@ -251,10 +295,12 @@ const rootRouteChildren: RootRouteChildren = {
   ContentsContentIdRoute: ContentsContentIdRoute,
   EditContentIdLazyRoute: EditContentIdLazyRoute,
   HomeUserIdLazyRoute: HomeUserIdLazyRoute,
+  EditIndexRoute: EditIndexRoute,
   ContentsIndexLazyRoute: ContentsIndexLazyRoute,
   DataIndexLazyRoute: DataIndexLazyRoute,
   LoginIndexLazyRoute: LoginIndexLazyRoute,
   SignupIndexLazyRoute: SignupIndexLazyRoute,
+  EditAnimeAnimeIdLazyRoute: EditAnimeAnimeIdLazyRoute,
   EditNewIndexLazyRoute: EditNewIndexLazyRoute,
 }
 
@@ -272,10 +318,12 @@ export const routeTree = rootRoute
         "/contents/$contentId",
         "/edit/$contentId",
         "/home/$userId",
+        "/edit/",
         "/contents/",
         "/data/",
         "/login/",
         "/signup/",
+        "/edit/anime/$animeId",
         "/edit/new/"
       ]
     },
@@ -291,6 +339,9 @@ export const routeTree = rootRoute
     "/home/$userId": {
       "filePath": "home/$userId.lazy.tsx"
     },
+    "/edit/": {
+      "filePath": "edit/index.tsx"
+    },
     "/contents/": {
       "filePath": "contents/index.lazy.tsx"
     },
@@ -302,6 +353,9 @@ export const routeTree = rootRoute
     },
     "/signup/": {
       "filePath": "signup/index.lazy.tsx"
+    },
+    "/edit/anime/$animeId": {
+      "filePath": "edit/anime/$animeId.lazy.tsx"
     },
     "/edit/new/": {
       "filePath": "edit/new/index.lazy.tsx"

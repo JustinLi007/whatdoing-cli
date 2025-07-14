@@ -44,6 +44,12 @@ type CreateContentResponse = WithNext & {}
 type AllAnimeResponse = {
   anime_list: Anime[];
 }
+type GetAnimeRequest = {
+  anime_id: string;
+}
+type GetAnimeResponse = {
+  anime: Anime;
+}
 
 type GetContentRequest = {
   content_id: string;

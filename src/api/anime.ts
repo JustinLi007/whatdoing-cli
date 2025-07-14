@@ -2,7 +2,7 @@ import { z } from "zod";
 import { base_url } from "./constants";
 
 const GetContentSchema = z.object({
-  content_id: z.string(),
+  anime_id: z.string(),
 });
 
 const UpdateAnimeSchema = z.object({
@@ -15,13 +15,13 @@ const UpdateAnimeSchema = z.object({
   alternative_names: z.string().array(),
 });
 
-export async function FetchAnimeById(params: GetContentRequest): Promise<GetContentResponse> {
+export async function FetchAnimeById(params: GetAnimeRequest): Promise<GetAnimeResponse> {
   const result = GetContentSchema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/contents/anime/${params.content_id}`;
+  const url = `${base_url}/contents/anime/${params.anime_id}`;
 
   try {
     const resp = await fetch(url, { credentials: "include" });

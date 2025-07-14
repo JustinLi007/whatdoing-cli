@@ -5,10 +5,10 @@ import type { FormEvent } from 'react';
 import { FetchAnimeById, FetchUpdateAnime } from '../../api/anime';
 
 export const Route = createLazyFileRoute('/edit/$contentId')({
-  component: Edit,
+  component: EditContent,
 })
 
-function Edit() {
+function EditContent() {
   const queryClient = useQueryClient();
   const navigate = useNavigate({
     from: `/edit/$contentId`,
