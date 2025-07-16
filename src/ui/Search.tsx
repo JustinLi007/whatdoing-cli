@@ -18,7 +18,7 @@ export default function Search(params: Parameters) {
         }
       }}
       placeholder="search"
-      className={`border-gray-500 border-1 py-1 px-3 outline-0 w-full`}
+      className={`py-1 px-3 outline-0 w-full`}
     />
   );
 }

@@ -1,4 +1,4 @@
-interface Parameters {
+type Parameters = {
   dropdownItems: SuggestionItem[];
   dropdownHidden: boolean;
   onSelect: (value: SuggestionItem) => void;

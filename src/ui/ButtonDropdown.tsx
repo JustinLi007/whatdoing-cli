@@ -1,13 +1,14 @@
+import type { MouseEvent } from "react";
 import Dropdown from "./Dropdown";
 
-interface Parameters {
+type Parameters = {
   id?: string;
   name: string;
   selectedValue: string;
   dropdownHidden: boolean;
   dropdownItems: SuggestionItem[];
   onSelect: (value: SuggestionItem) => void;
-  onClick: () => void;
+  onClick: (event: MouseEvent) => void;
 }
 
 export default function ButtonDropdown(params: Parameters) {
@@ -19,7 +20,9 @@ export default function ButtonDropdown(params: Parameters) {
       <button
         type="button"
         className={`border-1 border-gray-500 py-1 px-3`}
-        onClick={params.onClick}
+        onClick={(e) => {
+          params.onClick(e);
+        }}
       >
         {`${params.name}${params.selectedValue === "" ? "" : `: ${params.selectedValue}`}`}
       </button>
