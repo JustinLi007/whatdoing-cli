@@ -1,4 +1,4 @@
-import Option from "./Option";
+import OptionSquare from "./OptionSquare";
 
 type Paramaters = {
   menuItems: MenuItem[],
@@ -23,11 +23,11 @@ ${params.menuHidden ? "hidden" : ""}`
         }
 
         return (
-          <Option
+          <OptionSquare
             key={value.id}
-            Name={value.name}
-            Path={pathVal}
-            OnClick={params.onClick}
+            name={value.name}
+            path={pathVal}
+            onClick={params.onClick}
           />
         );
       })}

@@ -1,29 +1,17 @@
-import { Link } from "@tanstack/react-router"
+import { Link } from "@tanstack/react-router";
 
-interface Paramaters {
-  Name: string,
-  Path: string,
-  OnClick: () => void,
+type Parameters = {
+  text: string;
+  to: string;
 }
 
-export default function Option(params: Paramaters) {
+export default function Option(params: Parameters) {
   return (
-    <>
-      <div
-        className={
-          `aspect-square text-center content-center border-1 border-gray-500
-bg-gray-800`
-        }
-      >
-        <Link
-          to={params.Path}
-          className={`inline-block content-center w-full h-full active:bg-gray-600`}
-          activeProps={{ className: `font-bold` }}
-          activeOptions={{ exact: true }}
-          onClick={params.OnClick}
-        >{params.Name}
-        </Link>
-      </div>
-    </>
+    <div className={`border border-gray-500`}>
+      <Link
+        className={`inline-block w-full p-2 hover:bg-gray-500 active:bg-gray-700`}
+        to={params.to}
+      >{params.text}</Link>
+    </div>
   );
 }

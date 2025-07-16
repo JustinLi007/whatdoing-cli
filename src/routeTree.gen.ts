@@ -20,11 +20,13 @@ import { Route as ContentsContentIdImport } from './routes/contents/$contentId'
 
 const IndexLazyImport = createFileRoute('/')()
 const SignupIndexLazyImport = createFileRoute('/signup/')()
+const SearchIndexLazyImport = createFileRoute('/search/')()
 const LoginIndexLazyImport = createFileRoute('/login/')()
 const DataIndexLazyImport = createFileRoute('/data/')()
 const ContentsIndexLazyImport = createFileRoute('/contents/')()
 const HomeUserIdLazyImport = createFileRoute('/home/$userId')()
 const EditContentIdLazyImport = createFileRoute('/edit/$contentId')()
+const SearchAnimeIndexLazyImport = createFileRoute('/search/anime/')()
 const EditNewIndexLazyImport = createFileRoute('/edit/new/')()
 const EditAnimeAnimeIdLazyImport = createFileRoute('/edit/anime/$animeId')()
 
@@ -41,6 +43,12 @@ const SignupIndexLazyRoute = SignupIndexLazyImport.update({
   path: '/signup/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/signup/index.lazy').then((d) => d.Route))
+
+const SearchIndexLazyRoute = SearchIndexLazyImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/search/index.lazy').then((d) => d.Route))
 
 const LoginIndexLazyRoute = LoginIndexLazyImport.update({
   id: '/login/',
@@ -87,6 +95,14 @@ const ContentsContentIdRoute = ContentsContentIdImport.update({
   path: '/contents/$contentId',
   getParentRoute: () => rootRoute,
 } as any)
+
+const SearchAnimeIndexLazyRoute = SearchAnimeIndexLazyImport.update({
+  id: '/search/anime/',
+  path: '/search/anime/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/search/anime/index.lazy').then((d) => d.Route),
+)
 
 const EditNewIndexLazyRoute = EditNewIndexLazyImport.update({
   id: '/edit/new/',
@@ -164,6 +180,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/search/': {
+      id: '/search/'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/signup/': {
       id: '/signup/'
       path: '/signup'
@@ -185,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditNewIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/search/anime/': {
+      id: '/search/anime/'
+      path: '/search/anime'
+      fullPath: '/search/anime'
+      preLoaderRoute: typeof SearchAnimeIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -199,9 +229,11 @@ export interface FileRoutesByFullPath {
   '/contents': typeof ContentsIndexLazyRoute
   '/data': typeof DataIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
+  '/search': typeof SearchIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
   '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
   '/edit/new': typeof EditNewIndexLazyRoute
+  '/search/anime': typeof SearchAnimeIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -213,9 +245,11 @@ export interface FileRoutesByTo {
   '/contents': typeof ContentsIndexLazyRoute
   '/data': typeof DataIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
+  '/search': typeof SearchIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
   '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
   '/edit/new': typeof EditNewIndexLazyRoute
+  '/search/anime': typeof SearchAnimeIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -228,9 +262,11 @@ export interface FileRoutesById {
   '/contents/': typeof ContentsIndexLazyRoute
   '/data/': typeof DataIndexLazyRoute
   '/login/': typeof LoginIndexLazyRoute
+  '/search/': typeof SearchIndexLazyRoute
   '/signup/': typeof SignupIndexLazyRoute
   '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
   '/edit/new/': typeof EditNewIndexLazyRoute
+  '/search/anime/': typeof SearchAnimeIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -244,9 +280,11 @@ export interface FileRouteTypes {
     | '/contents'
     | '/data'
     | '/login'
+    | '/search'
     | '/signup'
     | '/edit/anime/$animeId'
     | '/edit/new'
+    | '/search/anime'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -257,9 +295,11 @@ export interface FileRouteTypes {
     | '/contents'
     | '/data'
     | '/login'
+    | '/search'
     | '/signup'
     | '/edit/anime/$animeId'
     | '/edit/new'
+    | '/search/anime'
   id:
     | '__root__'
     | '/'
@@ -270,9 +310,11 @@ export interface FileRouteTypes {
     | '/contents/'
     | '/data/'
     | '/login/'
+    | '/search/'
     | '/signup/'
     | '/edit/anime/$animeId'
     | '/edit/new/'
+    | '/search/anime/'
   fileRoutesById: FileRoutesById
 }
 
@@ -285,9 +327,11 @@ export interface RootRouteChildren {
   ContentsIndexLazyRoute: typeof ContentsIndexLazyRoute
   DataIndexLazyRoute: typeof DataIndexLazyRoute
   LoginIndexLazyRoute: typeof LoginIndexLazyRoute
+  SearchIndexLazyRoute: typeof SearchIndexLazyRoute
   SignupIndexLazyRoute: typeof SignupIndexLazyRoute
   EditAnimeAnimeIdLazyRoute: typeof EditAnimeAnimeIdLazyRoute
   EditNewIndexLazyRoute: typeof EditNewIndexLazyRoute
+  SearchAnimeIndexLazyRoute: typeof SearchAnimeIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -299,9 +343,11 @@ const rootRouteChildren: RootRouteChildren = {
   ContentsIndexLazyRoute: ContentsIndexLazyRoute,
   DataIndexLazyRoute: DataIndexLazyRoute,
   LoginIndexLazyRoute: LoginIndexLazyRoute,
+  SearchIndexLazyRoute: SearchIndexLazyRoute,
   SignupIndexLazyRoute: SignupIndexLazyRoute,
   EditAnimeAnimeIdLazyRoute: EditAnimeAnimeIdLazyRoute,
   EditNewIndexLazyRoute: EditNewIndexLazyRoute,
+  SearchAnimeIndexLazyRoute: SearchAnimeIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -322,9 +368,11 @@ export const routeTree = rootRoute
         "/contents/",
         "/data/",
         "/login/",
+        "/search/",
         "/signup/",
         "/edit/anime/$animeId",
-        "/edit/new/"
+        "/edit/new/",
+        "/search/anime/"
       ]
     },
     "/": {
@@ -351,6 +399,9 @@ export const routeTree = rootRoute
     "/login/": {
       "filePath": "login/index.lazy.tsx"
     },
+    "/search/": {
+      "filePath": "search/index.lazy.tsx"
+    },
     "/signup/": {
       "filePath": "signup/index.lazy.tsx"
     },
@@ -359,6 +410,9 @@ export const routeTree = rootRoute
     },
     "/edit/new/": {
       "filePath": "edit/new/index.lazy.tsx"
+    },
+    "/search/anime/": {
+      "filePath": "search/anime/index.lazy.tsx"
     }
   }
 }

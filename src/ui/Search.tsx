@@ -1,6 +1,6 @@
 import { type ChangeEvent, type MouseEvent } from 'react';
 
-interface Parameters {
+type Parameters = {
   searchValue: string;
   onChange: (e: ChangeEvent) => void;
   onClick?: (e: MouseEvent) => void;

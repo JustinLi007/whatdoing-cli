@@ -26,16 +26,20 @@ export default function Card(params: Parameters) {
               className={`object-center object-contain h-full w-full aspect-[9/16]`}
             />
           </div>
-          <div className={`p-2.5 w-3/5 overflow-auto`}>
-            <div className={`font-bold`}>
-              <a
-                href={contentLink}
-                target="_blank"
-                className={`text-lg ${contentLink.trim() === "" ? "pointer-events-none" : ""}`}
-              >{title}</a>
+          <div className={`relative w-3/5 overflow-auto`}>
+            <div>
+              <div className={`sticky left-0 top-0 bg-neutral-800 p-2`}>
+                <div className={`font-bold`}>
+                  <a
+                    href={contentLink}
+                    target="_blank"
+                    className={`text-lg ${contentLink.trim() === "" ? "pointer-events-none" : ""}`}
+                  >{title}</a>
+                </div>
+                <div>{episode}</div>
+              </div>
+              <div className={`p-2`}>{description}</div>
             </div>
-            <div>{episode}</div>
-            <div>{description}</div>
           </div>
         </div>
       </div>
