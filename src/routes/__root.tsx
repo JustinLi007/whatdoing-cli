@@ -18,29 +18,24 @@ function RootComponent() {
     },
     {
       id: "2",
-      name: "New Content",
-      path: "/edit/new",
-    },
-    {
-      id: "3",
       name: "Sign Up",
       path: "/signup",
     },
     {
-      id: "4",
+      id: "3",
       name: "Login",
       path: "/login",
     },
     {
-      id: "5",
+      id: "4",
       name: "Data",
       path: "/data",
     },
     {
-      id: "6",
+      id: "5",
       name: "Search",
       path: "/search"
-    }
+    },
   ];
 
   const [menuHidden, setMenuHidden] = useState(true);
