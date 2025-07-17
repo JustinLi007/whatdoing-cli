@@ -32,7 +32,6 @@ export default function Card(params: Parameters) {
                 <div className={`font-bold`}>
                   <a
                     href={contentLink}
-                    target="_blank"
                     className={`text-lg ${contentLink.trim() === "" ? "pointer-events-none" : ""}`}
                   >{title}</a>
                 </div>

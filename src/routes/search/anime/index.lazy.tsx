@@ -89,12 +89,11 @@ function SearchAnime() {
 
   function animeToCards(src: Anime[]) {
     const animeCards = src.map((anime) => {
-      // FIX: temp link to edit, should be content/anime/$id
       return (
         <Card
           key={anime.id}
           title={anime.anime_name.name}
-          contentLink={`/edit/anime/${anime.id}`}
+          contentLink={`/contents/anime/${anime.id}`}
           description={anime.description}
           episode={anime.episodes}
           imageSrc={anime.image_url}
