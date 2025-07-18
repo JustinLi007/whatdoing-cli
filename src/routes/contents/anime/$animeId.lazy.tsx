@@ -34,9 +34,9 @@ function ContentAnime() {
       <div className={`text-center font-bold text-lg`}>{data.anime.anime_name.name}</div>
 
       <div className={`flex flex-col flex-nowrap items-center gap-4`}>
-        <div className={`inline-block`}>
+        <div className={`inline-block w-64 h-[calc(calc(var(--spacing)*64)*calc(25/16))] aspect-[9/16] justify-items-center content-center`}>
           <img
-            className={``}
+            className={`object-contain object-center w-64 h-[calc(calc(var(--spacing)*64)*calc(25/16))] aspect-[9/16]`}
             src={`${data.anime.image_url ? data.anime.image_url : undefined}`}
           />
         </div>

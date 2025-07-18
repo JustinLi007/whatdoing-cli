@@ -45,7 +45,6 @@ function Signup() {
   }
 
   const mutation = useMutation({
-    // TODO:
     mutationFn: FetchSignup,
     onSuccess: (data) => {
       // Invalidate and refetch
