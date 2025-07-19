@@ -85,7 +85,10 @@ export default function FormAnimeEdit(params: Parameters) {
   }
 
   function handleTableInputRetrieve(input_values: string[]) {
-    set_new_alt_names(input_values);
+    const no_empty_values = input_values.filter((value) => {
+      return value.trim().length !== 0;
+    });
+    set_new_alt_names(no_empty_values);
   }
 
   return (
@@ -128,7 +131,6 @@ export default function FormAnimeEdit(params: Parameters) {
                     <div
                       key={name.id}
                       onClick={() => {
-                        console.log(name_id);
                         setNameId(name.id);
                         setName(getName(name.id));
                       }}
