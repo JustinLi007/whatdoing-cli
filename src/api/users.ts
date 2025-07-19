@@ -5,7 +5,7 @@ const schema = z.object({
   user_id: z.string().uuid("user id required"),
 });
 
-export async function fetchUserById(params: UserRequest): Promise<UserResponse> {
+export async function FetchUserById(params: UserRequest): Promise<UserResponse> {
   const result = schema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);

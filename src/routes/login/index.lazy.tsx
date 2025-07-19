@@ -1,4 +1,4 @@
-import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
+import { createLazyFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Input from '../../ui/Input';
@@ -10,9 +10,7 @@ export const Route = createLazyFileRoute('/login/')({
 })
 
 function Login() {
-  const navigate = useNavigate({
-    from: "/login",
-  });
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [email, setEmail] = useState("sample@sample.com");
   const [password, setPassword] = useState("shit");
@@ -61,32 +59,42 @@ function Login() {
   }
 
   return (
-    <div className={`flex flex-col flex-nowrap h-full items-center justify-center pb-6`}>
+    <div className={`flex flex-col flex-nowrap h-full items-center justify-center pb-6 gap-1.5`}>
       <form onSubmit={handleFormSubmit}>
-        <div>
-          <Input
-            id='email'
-            value={email}
-            type='email'
-            label='Email'
-            onChange={handleEmailOnChange}
-            required={true}
-          />
-        </div>
-        <div>
-          <Input
-            id='password'
-            value={password}
-            type='password'
-            label='Password'
-            onChange={handlePasswordOnChange}
-            required={true}
-          />
-        </div>
-        <div>
-          <button type="submit" className={`border-1 border-gray-500 mt-4 p-3 w-full active:bg-gray-500`}>Login</button>
+        <div className={`flex flex-col flex-nowrap gap-2`}>
+          <div>
+            <Input
+              id='email'
+              value={email}
+              type='email'
+              label='Email'
+              onChange={handleEmailOnChange}
+              required={true}
+            />
+          </div>
+          <div>
+            <Input
+              id='password'
+              value={password}
+              type='password'
+              label='Password'
+              onChange={handlePasswordOnChange}
+              required={true}
+            />
+          </div>
+          <div>
+            <button type="submit" className={`border-1 border-gray-500 p-3 w-full active:bg-gray-500`}>Login</button>
+          </div>
         </div>
       </form>
+      <div>
+        <div>
+          <Link
+            className={`text-sm underline`}
+            to="/signup"
+          >Don't have an account? Sign Up</Link>
+        </div>
+      </div>
     </div>
   );
 }

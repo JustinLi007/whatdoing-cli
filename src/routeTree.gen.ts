@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as HomeIndexImport } from './routes/home/index'
 import { Route as EditIndexImport } from './routes/edit/index'
 
 // Create Virtual Routes
@@ -20,6 +21,7 @@ import { Route as EditIndexImport } from './routes/edit/index'
 const IndexLazyImport = createFileRoute('/')()
 const SignupIndexLazyImport = createFileRoute('/signup/')()
 const SearchIndexLazyImport = createFileRoute('/search/')()
+const LogoutIndexLazyImport = createFileRoute('/logout/')()
 const LoginIndexLazyImport = createFileRoute('/login/')()
 const DataIndexLazyImport = createFileRoute('/data/')()
 const HomeUserIdLazyImport = createFileRoute('/home/$userId')()
@@ -51,6 +53,12 @@ const SearchIndexLazyRoute = SearchIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/search/index.lazy').then((d) => d.Route))
 
+const LogoutIndexLazyRoute = LogoutIndexLazyImport.update({
+  id: '/logout/',
+  path: '/logout/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/logout/index.lazy').then((d) => d.Route))
+
 const LoginIndexLazyRoute = LoginIndexLazyImport.update({
   id: '/login/',
   path: '/login/',
@@ -62,6 +70,12 @@ const DataIndexLazyRoute = DataIndexLazyImport.update({
   path: '/data/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/data/index.lazy').then((d) => d.Route))
+
+const HomeIndexRoute = HomeIndexImport.update({
+  id: '/home/',
+  path: '/home/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const EditIndexRoute = EditIndexImport.update({
   id: '/edit/',
@@ -140,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditIndexImport
       parentRoute: typeof rootRoute
     }
+    '/home/': {
+      id: '/home/'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/data/': {
       id: '/data/'
       path: '/data'
@@ -152,6 +173,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/logout/': {
+      id: '/logout/'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof LogoutIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/search/': {
@@ -212,8 +240,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
   '/edit': typeof EditIndexRoute
+  '/home': typeof HomeIndexRoute
   '/data': typeof DataIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
+  '/logout': typeof LogoutIndexLazyRoute
   '/search': typeof SearchIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
   '/contents/anime/$animeId': typeof ContentsAnimeAnimeIdLazyRoute
@@ -227,8 +257,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
   '/edit': typeof EditIndexRoute
+  '/home': typeof HomeIndexRoute
   '/data': typeof DataIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
+  '/logout': typeof LogoutIndexLazyRoute
   '/search': typeof SearchIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
   '/contents/anime/$animeId': typeof ContentsAnimeAnimeIdLazyRoute
@@ -243,8 +275,10 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/home/$userId': typeof HomeUserIdLazyRoute
   '/edit/': typeof EditIndexRoute
+  '/home/': typeof HomeIndexRoute
   '/data/': typeof DataIndexLazyRoute
   '/login/': typeof LoginIndexLazyRoute
+  '/logout/': typeof LogoutIndexLazyRoute
   '/search/': typeof SearchIndexLazyRoute
   '/signup/': typeof SignupIndexLazyRoute
   '/contents/anime/$animeId': typeof ContentsAnimeAnimeIdLazyRoute
@@ -260,8 +294,10 @@ export interface FileRouteTypes {
     | '/'
     | '/home/$userId'
     | '/edit'
+    | '/home'
     | '/data'
     | '/login'
+    | '/logout'
     | '/search'
     | '/signup'
     | '/contents/anime/$animeId'
@@ -274,8 +310,10 @@ export interface FileRouteTypes {
     | '/'
     | '/home/$userId'
     | '/edit'
+    | '/home'
     | '/data'
     | '/login'
+    | '/logout'
     | '/search'
     | '/signup'
     | '/contents/anime/$animeId'
@@ -288,8 +326,10 @@ export interface FileRouteTypes {
     | '/'
     | '/home/$userId'
     | '/edit/'
+    | '/home/'
     | '/data/'
     | '/login/'
+    | '/logout/'
     | '/search/'
     | '/signup/'
     | '/contents/anime/$animeId'
@@ -304,8 +344,10 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   HomeUserIdLazyRoute: typeof HomeUserIdLazyRoute
   EditIndexRoute: typeof EditIndexRoute
+  HomeIndexRoute: typeof HomeIndexRoute
   DataIndexLazyRoute: typeof DataIndexLazyRoute
   LoginIndexLazyRoute: typeof LoginIndexLazyRoute
+  LogoutIndexLazyRoute: typeof LogoutIndexLazyRoute
   SearchIndexLazyRoute: typeof SearchIndexLazyRoute
   SignupIndexLazyRoute: typeof SignupIndexLazyRoute
   ContentsAnimeAnimeIdLazyRoute: typeof ContentsAnimeAnimeIdLazyRoute
@@ -319,8 +361,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   HomeUserIdLazyRoute: HomeUserIdLazyRoute,
   EditIndexRoute: EditIndexRoute,
+  HomeIndexRoute: HomeIndexRoute,
   DataIndexLazyRoute: DataIndexLazyRoute,
   LoginIndexLazyRoute: LoginIndexLazyRoute,
+  LogoutIndexLazyRoute: LogoutIndexLazyRoute,
   SearchIndexLazyRoute: SearchIndexLazyRoute,
   SignupIndexLazyRoute: SignupIndexLazyRoute,
   ContentsAnimeAnimeIdLazyRoute: ContentsAnimeAnimeIdLazyRoute,
@@ -343,8 +387,10 @@ export const routeTree = rootRoute
         "/",
         "/home/$userId",
         "/edit/",
+        "/home/",
         "/data/",
         "/login/",
+        "/logout/",
         "/search/",
         "/signup/",
         "/contents/anime/$animeId",
@@ -363,11 +409,17 @@ export const routeTree = rootRoute
     "/edit/": {
       "filePath": "edit/index.tsx"
     },
+    "/home/": {
+      "filePath": "home/index.tsx"
+    },
     "/data/": {
       "filePath": "data/index.lazy.tsx"
     },
     "/login/": {
       "filePath": "login/index.lazy.tsx"
+    },
+    "/logout/": {
+      "filePath": "logout/index.lazy.tsx"
     },
     "/search/": {
       "filePath": "search/index.lazy.tsx"

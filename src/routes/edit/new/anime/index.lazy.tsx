@@ -9,9 +9,7 @@ export const Route = createLazyFileRoute('/edit/new/anime/')({
 })
 
 function RouteComponent() {
-  const navigate = useNavigate({
-    from: "/edit/new/anime",
-  });
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { isPending, isError, data, error } = useQuery({

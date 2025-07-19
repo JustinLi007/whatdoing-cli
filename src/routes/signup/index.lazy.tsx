@@ -9,9 +9,7 @@ export const Route = createLazyFileRoute('/signup/')({
 })
 
 function Signup() {
-  const navigate = useNavigate({
-    from: "/signup",
-  });
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
