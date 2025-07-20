@@ -1,6 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { useState, type MouseEvent } from 'react';
 import { FetchAnimeById } from '../../../api/anime';
+import { FetchAddAnimeToLibrary, FetchGetProgress } from '../../../api/library';
+import Button from '../../../ui/Button';
 
 export const Route = createLazyFileRoute('/contents/anime/$animeId')({
   component: ContentAnime,
@@ -9,13 +12,52 @@ export const Route = createLazyFileRoute('/contents/anime/$animeId')({
 function ContentAnime() {
   const { animeId } = Route.useParams();
 
+  const [relUserLibraryAnime, setRelUserLibraryAnime] = useState<RelAnimeUserLibrary | null>(null);
+
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["contents", "anime", animeId],
     queryFn: async () => {
       const resp = await FetchAnimeById({ anime_id: animeId });
       return resp;
-    }
+    },
   });
+
+  const { } = useQuery({
+    queryKey: ["user_library", "anime", "progress", animeId],
+    queryFn: async () => {
+      const resp = await FetchGetProgress({
+        progress_id: "",
+        anime_id: animeId,
+        status: "",
+      });
+
+      if (resp.progress.length > 0) {
+        setRelUserLibraryAnime(resp.progress[0]);
+      }
+
+      return resp;
+    },
+  });
+
+  const mutationAddToUserLibrary = useMutation({
+    mutationFn: FetchAddAnimeToLibrary,
+    onSuccess(data) {
+      setRelUserLibraryAnime(data.progress);
+    },
+    onError(error) {
+      console.log(`${error.name}, ${error.message}`);
+    },
+  });
+
+  function handleAddToLibraryBtnOnClick(event: MouseEvent) {
+    if (relUserLibraryAnime) {
+      return;
+    }
+
+    mutationAddToUserLibrary.mutate({
+      anime_id: animeId,
+    });
+  }
 
   if (isPending) {
     return (
@@ -41,6 +83,10 @@ function ContentAnime() {
           />
         </div>
         <div className={`inline-block h-48 overflow-y-scroll`}>{data.anime.description}</div>
+      </div>
+
+      <div>
+        <Button text={relUserLibraryAnime ? "In Library" : "Add To Library"} onClick={handleAddToLibraryBtnOnClick} disabled={relUserLibraryAnime ? true : false} />
       </div>
 
       <div className={`flex flex-col flex-nowrap gap-1.5`}>

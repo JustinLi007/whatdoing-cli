@@ -3,22 +3,17 @@ export function refreshInterval(params: {
   minutes?: number;
   hours?: number;
 }) {
-  const opts = {
-    seconds: 1,
-    minutes: 1,
-    hours: 1,
-  }
+  let milliseconds = 0;
 
   if (params.seconds) {
-    opts.seconds = Math.max(1, params.seconds);
+    milliseconds += params.seconds * 1000;
   }
   if (params.minutes) {
-    opts.minutes = Math.max(1, params.minutes);
+    milliseconds += params.minutes * 1000 * 60;
   }
   if (params.hours) {
-    opts.hours = Math.max(1, params.hours);
+    milliseconds += params.hours * 1000 * 60 * 60;
   }
 
-  const interval = 1000 * opts.seconds * opts.minutes * opts.hours;
-  return interval;
+  return milliseconds;
 }

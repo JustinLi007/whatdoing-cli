@@ -1,8 +1,10 @@
-import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
+import { createLazyFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Input from '../../ui/Input';
 import FetchSignup from '../../api/signup';
+import { refreshInterval } from '../../utils/timer';
+import Button from '../../ui/Button';
 
 export const Route = createLazyFileRoute('/signup/')({
   component: Signup,
@@ -44,12 +46,13 @@ function Signup() {
 
   const mutation = useMutation({
     mutationFn: FetchSignup,
-    onSuccess: (data) => {
-      // Invalidate and refetch
+    onSuccess: () => {
       queryClient.invalidateQueries();
-      console.log(data);
+      const t = refreshInterval({ hours: 1 });
+      localStorage.setItem("whatdoing-next-refresh", new Date(t).toString());
       navigate({
-        to: `${data.next}`,
+        to: "/library",
+        reloadDocument: true,
       });
     },
     onError: (err) => {
@@ -68,42 +71,47 @@ function Signup() {
   }
 
   return (
-    <div className={`flex flex-col flex-nowrap h-full items-center justify-center pb-6`}>
-      <form onSubmit={handleFormSubmit}>
+    <div className="flex flex-col flex-nowrap h-full items-center justify-center pb-6 gap-1.5">
+      <form
+        className="flex flex-col flex-nowrap gap-2"
+        onSubmit={handleFormSubmit}>
         <div>
           <Input
-            id='email'
+            id="email"
             value={email}
-            type='email'
-            label='Email'
+            type="email"
+            label="Email"
             onChange={handleEmailOnChange}
             required={true}
           />
         </div>
         <div>
           <Input
-            id='password'
+            id="password"
             value={password}
-            type='password'
-            label='Password'
+            type="password"
+            label="Password"
             onChange={handlePasswordOnChange}
             required={true}
           />
         </div>
         <div>
           <Input
-            id='username'
+            id="username"
             value={username}
-            type='text'
-            label='Username (optional)'
+            type="text"
+            label="Username (optional)"
             onChange={handleUsernameOnChange}
             required={false}
           />
         </div>
         <div>
-          <button type="submit" className={`border-1 border-gray-500 mt-4 p-3 w-full active:bg-gray-500`}>Sign Up</button>
+          <Button type="submit" text="Sign Up" onClick={() => { return; }} />
         </div>
       </form>
+      <div>
+        <Link className="text-sm underline" to="/login">Login</Link>
+      </div>
     </div>
   );
 }

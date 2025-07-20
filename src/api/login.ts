@@ -5,7 +5,7 @@ const schema = z.object({
   password: z.string().min(1, "password required"),
 });
 
-export default async function FetchLogin(params: LoginRequest): Promise<LoginResponse> {
+export default async function FetchLogin(params: LoginRequest): Promise<UserResponse> {
   const result = schema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);

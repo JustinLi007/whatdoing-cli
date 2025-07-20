@@ -4,15 +4,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Input from '../../ui/Input';
 import FetchLogin from '../../api/login';
 import { refreshInterval } from '../../utils/timer';
+import Button from '../../ui/Button';
 
 export const Route = createLazyFileRoute('/login/')({
   component: Login,
-})
+});
 
 function Login() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [email, setEmail] = useState("sample@sample.com");
+  const [email, setEmail] = useState("testuser4@testuser.com");
   const [password, setPassword] = useState("shit");
 
   function handleEmailOnChange(event: ChangeEvent) {
@@ -35,14 +36,13 @@ function Login() {
 
   const mutation = useMutation({
     mutationFn: FetchLogin,
-    onSuccess: (data) => {
-      // Invalidate and refetch
+    onSuccess: () => {
       queryClient.invalidateQueries();
-      localStorage.setItem("whatdoing-user-id", data.user.id);
-      const t = refreshInterval({ seconds: 10, minutes: 1, hours: 1 });
+      const t = refreshInterval({ hours: 1 });
       localStorage.setItem("whatdoing-next-refresh", new Date(t).toString());
       navigate({
-        to: `${data.next}`,
+        to: "/library",
+        reloadDocument: true,
       });
     },
     onError: (err) => {
@@ -59,41 +59,36 @@ function Login() {
   }
 
   return (
-    <div className={`flex flex-col flex-nowrap h-full items-center justify-center pb-6 gap-1.5`}>
-      <form onSubmit={handleFormSubmit}>
-        <div className={`flex flex-col flex-nowrap gap-2`}>
-          <div>
-            <Input
-              id='email'
-              value={email}
-              type='email'
-              label='Email'
-              onChange={handleEmailOnChange}
-              required={true}
-            />
-          </div>
-          <div>
-            <Input
-              id='password'
-              value={password}
-              type='password'
-              label='Password'
-              onChange={handlePasswordOnChange}
-              required={true}
-            />
-          </div>
-          <div>
-            <button type="submit" className={`border-1 border-gray-500 p-3 w-full active:bg-gray-500`}>Login</button>
-          </div>
+    <div className="flex flex-col flex-nowrap h-full items-center justify-center pb-6 gap-1.5">
+      <form
+        className="flex flex-col flex-nowrap gap-2"
+        onSubmit={handleFormSubmit}>
+        <div>
+          <Input
+            id="email"
+            value={email}
+            type="email"
+            label="Email"
+            onChange={handleEmailOnChange}
+            required={true}
+          />
+        </div>
+        <div>
+          <Input
+            id="password"
+            value={password}
+            type="password"
+            label="Password"
+            onChange={handlePasswordOnChange}
+            required={true}
+          />
+        </div>
+        <div>
+          <Button type="submit" text="Login" onClick={() => { return; }} />
         </div>
       </form>
       <div>
-        <div>
-          <Link
-            className={`text-sm underline`}
-            to="/signup"
-          >Don't have an account? Sign Up</Link>
-        </div>
+        <Link className="text-sm underline" to="/signup">Sign Up</Link>
       </div>
     </div>
   );

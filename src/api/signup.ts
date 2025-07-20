@@ -6,7 +6,7 @@ const schema = z.object({
   username: z.string().optional(),
 });
 
-export default async function FetchSignup(params: SignupRequest): Promise<SignupResponse> {
+export default async function FetchSignup(params: SignupRequest): Promise<UserResponse> {
   const result = schema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);

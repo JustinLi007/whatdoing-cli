@@ -6,12 +6,13 @@ import { FetchAnimeById, FetchUpdateAnime } from '../../../api/anime';
 
 export const Route = createLazyFileRoute('/edit/anime/$animeId')({
   component: EditAnime,
-})
+});
 
 function EditAnime() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { animeId } = Route.useParams();
+
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["edit", "anime", animeId],
     queryFn: async () => {
@@ -22,11 +23,12 @@ function EditAnime() {
 
   const mutationAnime = useMutation({
     mutationFn: FetchUpdateAnime,
-    onSuccess(data) {
+    onSuccess() {
       queryClient.invalidateQueries();
       navigate({
-        to: data.next,
-      })
+        to: "/contents/anime/$animeId",
+        params: { animeId: animeId },
+      });
     },
     onError(error) {
       console.log(`error: failed to update anime entry: ${error}`);

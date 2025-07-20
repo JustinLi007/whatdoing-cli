@@ -26,7 +26,7 @@ const CreateAnimeSchema = z.object({
   description: z.string(),
 });
 
-export async function FetchCreateAnime(params: CreateAnimeRequest): Promise<CreateAnimeResponse> {
+export async function FetchCreateAnime(params: CreateAnimeRequest): Promise<AnimeResponse> {
   const result = CreateAnimeSchema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);
@@ -55,7 +55,7 @@ export async function FetchCreateAnime(params: CreateAnimeRequest): Promise<Crea
   }
 }
 
-export async function FetchAnimeById(params: GetAnimeRequest): Promise<GetAnimeResponse> {
+export async function FetchAnimeById(params: GetAnimeRequest): Promise<AnimeResponse> {
   const result = GetContentSchema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);
@@ -76,7 +76,7 @@ export async function FetchAnimeById(params: GetAnimeRequest): Promise<GetAnimeR
   }
 }
 
-export async function FetchAllAnime(): Promise<AllAnimeResponse> {
+export async function FetchAllAnime(): Promise<AnimeArrayResponse> {
   const url = `${base_url}/contents/anime`;
 
   try {
@@ -92,7 +92,7 @@ export async function FetchAllAnime(): Promise<AllAnimeResponse> {
   }
 }
 
-export async function FetchUpdateAnime(params: UpdateAnimeRequest): Promise<UpdateAnimeResponse> {
+export async function FetchUpdateAnime(params: UpdateAnimeRequest): Promise<EmptyResponse> {
   const result = UpdateAnimeSchema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);
@@ -100,7 +100,7 @@ export async function FetchUpdateAnime(params: UpdateAnimeRequest): Promise<Upda
 
   const url = `${base_url}/contents/anime/${params.content_id}`;
   const payload: RequestInit = {
-    method: "POST",
+    method: "PUT",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

@@ -27,3 +27,45 @@ export async function FetchUserById(params: UserRequest): Promise<UserResponse> 
     throw err;
   }
 }
+
+export async function FetchCheckSession(): Promise<UserResponse> {
+  const url = `${base_url}/users/session`
+
+  try {
+    const resp = await fetch(url, {
+      credentials: "include",
+    });
+    if (!resp.ok) {
+      throw new Error(`failed with code ${resp.status}, ${resp.statusText}.`);
+    }
+
+    const json_data = await resp.json();
+    return json_data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function FetchRefresh(): Promise<EmptyResponse> {
+  const url = `${base_url}/tokens/refresh`
+
+  const payload: RequestInit = {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+
+  try {
+    const resp = await fetch(url, payload);
+    if (!resp.ok) {
+      throw new Error(`failed with code ${resp.status}, ${resp.statusText}.`);
+    }
+
+    const json_data = await resp.json();
+    return json_data;
+  } catch (err) {
+    throw err;
+  }
+}

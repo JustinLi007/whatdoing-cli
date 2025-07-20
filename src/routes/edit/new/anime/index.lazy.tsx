@@ -6,7 +6,7 @@ import FormAnimeAdd from '../../../../ui/FormAnimeAdd';
 
 export const Route = createLazyFileRoute('/edit/new/anime/')({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const navigate = useNavigate();
@@ -25,8 +25,11 @@ function RouteComponent() {
     onSuccess(data) {
       queryClient.invalidateQueries();
       navigate({
-        to: data.next,
-      })
+        to: "/contents/anime/$animeId",
+        params: {
+          animeId: data.anime.id,
+        }
+      });
     },
     onError(error) {
       console.log(`error: failed to create anime entry: ${error}`);
@@ -34,7 +37,7 @@ function RouteComponent() {
   })
   function handleOnSubmitAnime(event: FormEvent, params: CreateAnimeRequest) {
     event.preventDefault();
-    console.log(params);
+
     mutationAnime.mutate({
       content_type: params.content_type,
       name: params.name,

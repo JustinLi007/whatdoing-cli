@@ -15,7 +15,7 @@ type ContentKinds = "anime" | "manga";
 
 type Anime = StructBase & {
   kind: "anime";
-  episodes?: number;
+  episodes: number; // TODO: previously optional, check places where it still checks for null
   description?: string;
   image_url?: string;
   anime_name: AnimeName;
@@ -34,4 +34,15 @@ type Manga = StructBase & {
 type RelAnimeAnimeNames = StructBase & {
   anime_id: string;
   anime_name: AnimeName;
+}
+
+type UserLibrary = StructBase & {
+  name: string;
+}
+
+type UserLibraryStatus = "started" | "not-started" | "completed";
+type RelAnimeUserLibrary = StructBase & {
+  status: UserLibraryStatus;
+  episode: number;
+  anime: Anime;
 }

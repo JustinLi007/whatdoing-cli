@@ -13,18 +13,21 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as HomeIndexImport } from './routes/home/index'
+import { Route as LibraryRouteImport } from './routes/library/route'
+import { Route as IndexImport } from './routes/index'
 import { Route as EditIndexImport } from './routes/edit/index'
+import { Route as LibraryStartedIndexImport } from './routes/library/started/index'
+import { Route as LibraryNotstartedIndexImport } from './routes/library/notstarted/index'
+import { Route as LibraryCompletedIndexImport } from './routes/library/completed/index'
 
 // Create Virtual Routes
 
-const IndexLazyImport = createFileRoute('/')()
 const SignupIndexLazyImport = createFileRoute('/signup/')()
 const SearchIndexLazyImport = createFileRoute('/search/')()
 const LogoutIndexLazyImport = createFileRoute('/logout/')()
 const LoginIndexLazyImport = createFileRoute('/login/')()
+const GetstartedIndexLazyImport = createFileRoute('/getstarted/')()
 const DataIndexLazyImport = createFileRoute('/data/')()
-const HomeUserIdLazyImport = createFileRoute('/home/$userId')()
 const SearchAnimeIndexLazyImport = createFileRoute('/search/anime/')()
 const DataAnimeIndexLazyImport = createFileRoute('/data/anime/')()
 const EditAnimeAnimeIdLazyImport = createFileRoute('/edit/anime/$animeId')()
@@ -32,14 +35,23 @@ const ContentsAnimeAnimeIdLazyImport = createFileRoute(
   '/contents/anime/$animeId',
 )()
 const EditNewAnimeIndexLazyImport = createFileRoute('/edit/new/anime/')()
+const LibraryStartedDetailProgressIdLazyImport = createFileRoute(
+  '/library/started/detail/$progressId',
+)()
 
 // Create/Update Routes
 
-const IndexLazyRoute = IndexLazyImport.update({
+const LibraryRouteRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any)
 
 const SignupIndexLazyRoute = SignupIndexLazyImport.update({
   id: '/signup/',
@@ -65,29 +77,25 @@ const LoginIndexLazyRoute = LoginIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login/index.lazy').then((d) => d.Route))
 
+const GetstartedIndexLazyRoute = GetstartedIndexLazyImport.update({
+  id: '/getstarted/',
+  path: '/getstarted/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/getstarted/index.lazy').then((d) => d.Route),
+)
+
 const DataIndexLazyRoute = DataIndexLazyImport.update({
   id: '/data/',
   path: '/data/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/data/index.lazy').then((d) => d.Route))
 
-const HomeIndexRoute = HomeIndexImport.update({
-  id: '/home/',
-  path: '/home/',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const EditIndexRoute = EditIndexImport.update({
   id: '/edit/',
   path: '/edit/',
   getParentRoute: () => rootRoute,
 } as any)
-
-const HomeUserIdLazyRoute = HomeUserIdLazyImport.update({
-  id: '/home/$userId',
-  path: '/home/$userId',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/home/$userId.lazy').then((d) => d.Route))
 
 const SearchAnimeIndexLazyRoute = SearchAnimeIndexLazyImport.update({
   id: '/search/anime/',
@@ -104,6 +112,24 @@ const DataAnimeIndexLazyRoute = DataAnimeIndexLazyImport.update({
 } as any).lazy(() =>
   import('./routes/data/anime/index.lazy').then((d) => d.Route),
 )
+
+const LibraryStartedIndexRoute = LibraryStartedIndexImport.update({
+  id: '/started/',
+  path: '/started/',
+  getParentRoute: () => LibraryRouteRoute,
+} as any)
+
+const LibraryNotstartedIndexRoute = LibraryNotstartedIndexImport.update({
+  id: '/notstarted/',
+  path: '/notstarted/',
+  getParentRoute: () => LibraryRouteRoute,
+} as any)
+
+const LibraryCompletedIndexRoute = LibraryCompletedIndexImport.update({
+  id: '/completed/',
+  path: '/completed/',
+  getParentRoute: () => LibraryRouteRoute,
+} as any)
 
 const EditAnimeAnimeIdLazyRoute = EditAnimeAnimeIdLazyImport.update({
   id: '/edit/anime/$animeId',
@@ -129,6 +155,17 @@ const EditNewAnimeIndexLazyRoute = EditNewAnimeIndexLazyImport.update({
   import('./routes/edit/new/anime/index.lazy').then((d) => d.Route),
 )
 
+const LibraryStartedDetailProgressIdLazyRoute =
+  LibraryStartedDetailProgressIdLazyImport.update({
+    id: '/started/detail/$progressId',
+    path: '/started/detail/$progressId',
+    getParentRoute: () => LibraryRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/library/started/detail/$progressId.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -137,14 +174,14 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/home/$userId': {
-      id: '/home/$userId'
-      path: '/home/$userId'
-      fullPath: '/home/$userId'
-      preLoaderRoute: typeof HomeUserIdLazyImport
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRoute
     }
     '/edit/': {
@@ -154,18 +191,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditIndexImport
       parentRoute: typeof rootRoute
     }
-    '/home/': {
-      id: '/home/'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeIndexImport
-      parentRoute: typeof rootRoute
-    }
     '/data/': {
       id: '/data/'
       path: '/data'
       fullPath: '/data'
       preLoaderRoute: typeof DataIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/getstarted/': {
+      id: '/getstarted/'
+      path: '/getstarted'
+      fullPath: '/getstarted'
+      preLoaderRoute: typeof GetstartedIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/login/': {
@@ -210,6 +247,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditAnimeAnimeIdLazyImport
       parentRoute: typeof rootRoute
     }
+    '/library/completed/': {
+      id: '/library/completed/'
+      path: '/completed'
+      fullPath: '/library/completed'
+      preLoaderRoute: typeof LibraryCompletedIndexImport
+      parentRoute: typeof LibraryRouteImport
+    }
+    '/library/notstarted/': {
+      id: '/library/notstarted/'
+      path: '/notstarted'
+      fullPath: '/library/notstarted'
+      preLoaderRoute: typeof LibraryNotstartedIndexImport
+      parentRoute: typeof LibraryRouteImport
+    }
+    '/library/started/': {
+      id: '/library/started/'
+      path: '/started'
+      fullPath: '/library/started'
+      preLoaderRoute: typeof LibraryStartedIndexImport
+      parentRoute: typeof LibraryRouteImport
+    }
     '/data/anime/': {
       id: '/data/anime/'
       path: '/data/anime'
@@ -224,6 +282,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchAnimeIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/library/started/detail/$progressId': {
+      id: '/library/started/detail/$progressId'
+      path: '/started/detail/$progressId'
+      fullPath: '/library/started/detail/$progressId'
+      preLoaderRoute: typeof LibraryStartedDetailProgressIdLazyImport
+      parentRoute: typeof LibraryRouteImport
+    }
     '/edit/new/anime/': {
       id: '/edit/new/anime/'
       path: '/edit/new/anime'
@@ -236,55 +301,86 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface LibraryRouteRouteChildren {
+  LibraryCompletedIndexRoute: typeof LibraryCompletedIndexRoute
+  LibraryNotstartedIndexRoute: typeof LibraryNotstartedIndexRoute
+  LibraryStartedIndexRoute: typeof LibraryStartedIndexRoute
+  LibraryStartedDetailProgressIdLazyRoute: typeof LibraryStartedDetailProgressIdLazyRoute
+}
+
+const LibraryRouteRouteChildren: LibraryRouteRouteChildren = {
+  LibraryCompletedIndexRoute: LibraryCompletedIndexRoute,
+  LibraryNotstartedIndexRoute: LibraryNotstartedIndexRoute,
+  LibraryStartedIndexRoute: LibraryStartedIndexRoute,
+  LibraryStartedDetailProgressIdLazyRoute:
+    LibraryStartedDetailProgressIdLazyRoute,
+}
+
+const LibraryRouteRouteWithChildren = LibraryRouteRoute._addFileChildren(
+  LibraryRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '/home/$userId': typeof HomeUserIdLazyRoute
+  '/': typeof IndexRoute
+  '/library': typeof LibraryRouteRouteWithChildren
   '/edit': typeof EditIndexRoute
-  '/home': typeof HomeIndexRoute
   '/data': typeof DataIndexLazyRoute
+  '/getstarted': typeof GetstartedIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
   '/logout': typeof LogoutIndexLazyRoute
   '/search': typeof SearchIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
   '/contents/anime/$animeId': typeof ContentsAnimeAnimeIdLazyRoute
   '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
+  '/library/completed': typeof LibraryCompletedIndexRoute
+  '/library/notstarted': typeof LibraryNotstartedIndexRoute
+  '/library/started': typeof LibraryStartedIndexRoute
   '/data/anime': typeof DataAnimeIndexLazyRoute
   '/search/anime': typeof SearchAnimeIndexLazyRoute
+  '/library/started/detail/$progressId': typeof LibraryStartedDetailProgressIdLazyRoute
   '/edit/new/anime': typeof EditNewAnimeIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '/home/$userId': typeof HomeUserIdLazyRoute
+  '/': typeof IndexRoute
+  '/library': typeof LibraryRouteRouteWithChildren
   '/edit': typeof EditIndexRoute
-  '/home': typeof HomeIndexRoute
   '/data': typeof DataIndexLazyRoute
+  '/getstarted': typeof GetstartedIndexLazyRoute
   '/login': typeof LoginIndexLazyRoute
   '/logout': typeof LogoutIndexLazyRoute
   '/search': typeof SearchIndexLazyRoute
   '/signup': typeof SignupIndexLazyRoute
   '/contents/anime/$animeId': typeof ContentsAnimeAnimeIdLazyRoute
   '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
+  '/library/completed': typeof LibraryCompletedIndexRoute
+  '/library/notstarted': typeof LibraryNotstartedIndexRoute
+  '/library/started': typeof LibraryStartedIndexRoute
   '/data/anime': typeof DataAnimeIndexLazyRoute
   '/search/anime': typeof SearchAnimeIndexLazyRoute
+  '/library/started/detail/$progressId': typeof LibraryStartedDetailProgressIdLazyRoute
   '/edit/new/anime': typeof EditNewAnimeIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
-  '/home/$userId': typeof HomeUserIdLazyRoute
+  '/': typeof IndexRoute
+  '/library': typeof LibraryRouteRouteWithChildren
   '/edit/': typeof EditIndexRoute
-  '/home/': typeof HomeIndexRoute
   '/data/': typeof DataIndexLazyRoute
+  '/getstarted/': typeof GetstartedIndexLazyRoute
   '/login/': typeof LoginIndexLazyRoute
   '/logout/': typeof LogoutIndexLazyRoute
   '/search/': typeof SearchIndexLazyRoute
   '/signup/': typeof SignupIndexLazyRoute
   '/contents/anime/$animeId': typeof ContentsAnimeAnimeIdLazyRoute
   '/edit/anime/$animeId': typeof EditAnimeAnimeIdLazyRoute
+  '/library/completed/': typeof LibraryCompletedIndexRoute
+  '/library/notstarted/': typeof LibraryNotstartedIndexRoute
+  '/library/started/': typeof LibraryStartedIndexRoute
   '/data/anime/': typeof DataAnimeIndexLazyRoute
   '/search/anime/': typeof SearchAnimeIndexLazyRoute
+  '/library/started/detail/$progressId': typeof LibraryStartedDetailProgressIdLazyRoute
   '/edit/new/anime/': typeof EditNewAnimeIndexLazyRoute
 }
 
@@ -292,60 +388,72 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/home/$userId'
+    | '/library'
     | '/edit'
-    | '/home'
     | '/data'
+    | '/getstarted'
     | '/login'
     | '/logout'
     | '/search'
     | '/signup'
     | '/contents/anime/$animeId'
     | '/edit/anime/$animeId'
+    | '/library/completed'
+    | '/library/notstarted'
+    | '/library/started'
     | '/data/anime'
     | '/search/anime'
+    | '/library/started/detail/$progressId'
     | '/edit/new/anime'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/home/$userId'
+    | '/library'
     | '/edit'
-    | '/home'
     | '/data'
+    | '/getstarted'
     | '/login'
     | '/logout'
     | '/search'
     | '/signup'
     | '/contents/anime/$animeId'
     | '/edit/anime/$animeId'
+    | '/library/completed'
+    | '/library/notstarted'
+    | '/library/started'
     | '/data/anime'
     | '/search/anime'
+    | '/library/started/detail/$progressId'
     | '/edit/new/anime'
   id:
     | '__root__'
     | '/'
-    | '/home/$userId'
+    | '/library'
     | '/edit/'
-    | '/home/'
     | '/data/'
+    | '/getstarted/'
     | '/login/'
     | '/logout/'
     | '/search/'
     | '/signup/'
     | '/contents/anime/$animeId'
     | '/edit/anime/$animeId'
+    | '/library/completed/'
+    | '/library/notstarted/'
+    | '/library/started/'
     | '/data/anime/'
     | '/search/anime/'
+    | '/library/started/detail/$progressId'
     | '/edit/new/anime/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
-  HomeUserIdLazyRoute: typeof HomeUserIdLazyRoute
+  IndexRoute: typeof IndexRoute
+  LibraryRouteRoute: typeof LibraryRouteRouteWithChildren
   EditIndexRoute: typeof EditIndexRoute
-  HomeIndexRoute: typeof HomeIndexRoute
   DataIndexLazyRoute: typeof DataIndexLazyRoute
+  GetstartedIndexLazyRoute: typeof GetstartedIndexLazyRoute
   LoginIndexLazyRoute: typeof LoginIndexLazyRoute
   LogoutIndexLazyRoute: typeof LogoutIndexLazyRoute
   SearchIndexLazyRoute: typeof SearchIndexLazyRoute
@@ -358,11 +466,11 @@ export interface RootRouteChildren {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
-  HomeUserIdLazyRoute: HomeUserIdLazyRoute,
+  IndexRoute: IndexRoute,
+  LibraryRouteRoute: LibraryRouteRouteWithChildren,
   EditIndexRoute: EditIndexRoute,
-  HomeIndexRoute: HomeIndexRoute,
   DataIndexLazyRoute: DataIndexLazyRoute,
+  GetstartedIndexLazyRoute: GetstartedIndexLazyRoute,
   LoginIndexLazyRoute: LoginIndexLazyRoute,
   LogoutIndexLazyRoute: LogoutIndexLazyRoute,
   SearchIndexLazyRoute: SearchIndexLazyRoute,
@@ -385,10 +493,10 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/home/$userId",
+        "/library",
         "/edit/",
-        "/home/",
         "/data/",
+        "/getstarted/",
         "/login/",
         "/logout/",
         "/search/",
@@ -401,19 +509,25 @@ export const routeTree = rootRoute
       ]
     },
     "/": {
-      "filePath": "index.lazy.tsx"
+      "filePath": "index.tsx"
     },
-    "/home/$userId": {
-      "filePath": "home/$userId.lazy.tsx"
+    "/library": {
+      "filePath": "library/route.tsx",
+      "children": [
+        "/library/completed/",
+        "/library/notstarted/",
+        "/library/started/",
+        "/library/started/detail/$progressId"
+      ]
     },
     "/edit/": {
       "filePath": "edit/index.tsx"
     },
-    "/home/": {
-      "filePath": "home/index.tsx"
-    },
     "/data/": {
       "filePath": "data/index.lazy.tsx"
+    },
+    "/getstarted/": {
+      "filePath": "getstarted/index.lazy.tsx"
     },
     "/login/": {
       "filePath": "login/index.lazy.tsx"
@@ -433,11 +547,27 @@ export const routeTree = rootRoute
     "/edit/anime/$animeId": {
       "filePath": "edit/anime/$animeId.lazy.tsx"
     },
+    "/library/completed/": {
+      "filePath": "library/completed/index.tsx",
+      "parent": "/library"
+    },
+    "/library/notstarted/": {
+      "filePath": "library/notstarted/index.tsx",
+      "parent": "/library"
+    },
+    "/library/started/": {
+      "filePath": "library/started/index.tsx",
+      "parent": "/library"
+    },
     "/data/anime/": {
       "filePath": "data/anime/index.lazy.tsx"
     },
     "/search/anime/": {
       "filePath": "search/anime/index.lazy.tsx"
+    },
+    "/library/started/detail/$progressId": {
+      "filePath": "library/started/detail/$progressId.lazy.tsx",
+      "parent": "/library"
     },
     "/edit/new/anime/": {
       "filePath": "edit/new/anime/index.lazy.tsx"

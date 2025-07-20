@@ -1,107 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Menu from "../ui/Menu";
 import Header from "../ui/Header";
-import { local_storage_user_id } from "../api/constants";
+import { FetchCheckSession } from "../api/users";
+import { newDocClickHandler } from "../utils/ui";
 
 export const Route = createRootRoute({
   component: RootComponent,
+  loader: async () => {
+    try {
+      const resp = await FetchCheckSession();
+      return resp;
+    } catch (err) {
+      return null;
+    }
+  },
 })
 
 function RootComponent() {
-  const menuItems: MenuItem[] = [
-    {
-      id: "1",
-      name: "Home",
-      path: "/home",
-    },
-    {
-      id: "4",
-      name: "Data",
-      path: "/data",
-    },
-    {
-      id: "5",
-      name: "Search",
-      path: "/search"
-    },
-    {
-      id: "3",
-      name: "Login",
-      path: "/login",
-    },
-    {
-      id: "6",
-      name: "Logout",
-      path: "/logout"
-    },
-  ];
+  const user = Route.useLoaderData();
+  const [menu_hidden, setMenuHidden] = useState<boolean>(true);
 
-  const [menuHidden, setMenuHidden] = useState(true);
+  const toggleMenu = newDocClickHandler("root-menu", (value) => {
+    setMenuHidden(value);
+  });
 
-  function handleBtnClick() {
-    setMenuHidden(!menuHidden);
-  }
-
-  function getMenuItems(params: MenuItem[]) {
-    const params_copy = params.slice();
-    const user_id = localStorage.getItem(local_storage_user_id);
-
-    const parse_item = (item: MenuItem, index: number): MenuItem => {
-      switch (item.name) {
-        case "Home":
-          const base = {
-            id: index.toString(),
-            name: item.name,
-            path: item.path,
-          }
-          if (!user_id) {
-            return base;
-          }
-          base.path = `${base.path}/${user_id}`;
-          return base;
-        default:
-          return {
-            id: index.toString(),
-            name: item.name,
-            path: item.path,
-          }
-      }
+  useEffect(() => {
+    document.addEventListener("click", toggleMenu);
+    return () => {
+      document.removeEventListener("click", toggleMenu);
     }
+  }, []);
 
-    const menu_items: MenuItem[] = [];
-    for (let i = 0; i < params_copy.length; i++) {
-      const cur = params_copy[i];
-      if (cur.name === "Login" && user_id) {
-        continue;
-      }
-      if (cur.name === "Logout" && !user_id) {
-        continue;
-      }
-      menu_items.push(parse_item(cur, i));
-    }
-
-    return menu_items;
+  function handleMenuBtnOnClick() {
+    setMenuHidden(!menu_hidden);
   }
 
   return (
     <>
       <div className={`flex flex-col h-dvh`}>
-        <header className={`shrink-0`}>
-          <Header
-            HeaderLink={{ id: "whatdoing-header", name: "Whatdoing", path: "/" }}
-            BtnOnClick={handleBtnClick}
-          />
-          <div
-            className={`absolute left-0 right-0 top-auto bottom-auto bg-neutral-700 z-10`}
-          >
-            <Menu
-              menuItems={getMenuItems(menuItems)}
-              menuHidden={menuHidden}
-              onClick={handleBtnClick}
-            />
+        <header id="root-menu" className={`shrink-0`}>
+          <Header title="Whatdoing" onClick={handleMenuBtnOnClick} />
+          <div className={`absolute left-0 right-0 top-auto bottom-auto z-10`}>
+            <Menu login={user ? true : false} hidden={menu_hidden} onClick={(_) => {
+              setMenuHidden(true);
+            }} />
           </div>
         </header>
 

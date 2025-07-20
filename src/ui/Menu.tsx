@@ -1,28 +1,23 @@
-import OptionSquare from "./OptionSquare";
+import type { MouseEvent } from "react";
+import Option from "./Option";
 
 type Paramaters = {
-  menuItems: MenuItem[],
-  menuHidden: boolean,
-  onClick: () => void,
+  id?: string;
+  hidden: boolean;
+  login: boolean;
+  onClick: (e: MouseEvent) => void;
 }
 
 export default function Menu(params: Paramaters) {
   return (
     <div
-      className={`grid grid-cols-2 landscape:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 p-2
-${params.menuHidden ? "hidden" : ""}`
-      }
-    >
-      {params.menuItems.map((value) => {
-        return (
-          <OptionSquare
-            key={value.id}
-            name={value.name}
-            path={value.path}
-            onClick={params.onClick}
-          />
-        );
-      })}
+      id={params.id}
+      className={`relative flex flex-col flex-nowrap gap-2 p-3 ${params.hidden ? "hidden" : ""} h-full`}>
+      <Option text="Library" to="/library/started" onClick={params.onClick} />
+      <Option text="Search" to="/search" onClick={params.onClick} />
+      <Option text="Data" to="/data" onClick={params.onClick} />
+      {params.login ? <Option text="Logout" to="/logout" onClick={params.onClick} /> : <Option text="Login" to="/login" onClick={params.onClick} />}
+      <div className="absolute bg-zinc-600 top-0 left-0 right-0 bottom-0 opacity-75 -z-10"></div>
     </div>
   );
 }
