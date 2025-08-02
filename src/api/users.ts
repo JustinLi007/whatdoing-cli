@@ -69,3 +69,26 @@ export async function FetchRefresh(): Promise<EmptyResponse> {
     throw err;
   }
 }
+
+export async function FetchLogout(): Promise<EmptyResponse> {
+  const url = `${base_url}/users/session`
+  const payload: RequestInit = {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+
+  try {
+    const resp = await fetch(url, payload);
+    if (!resp.ok) {
+      throw new Error(`failed with code ${resp.status}, ${resp.statusText}.`);
+    }
+
+    const json_data = await resp.json();
+    return json_data;
+  } catch (err) {
+    throw err;
+  }
+}

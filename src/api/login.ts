@@ -33,4 +33,3 @@ export default async function FetchLogin(params: LoginRequest): Promise<UserResp
     throw err;
   }
 }
-

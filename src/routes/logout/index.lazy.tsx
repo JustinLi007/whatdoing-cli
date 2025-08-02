@@ -1,23 +1,26 @@
-import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
-import { local_storage_user_id } from '../../api/constants';
+import { useMutation } from '@tanstack/react-query'
+import { createLazyFileRoute, Navigate } from '@tanstack/react-router'
+import { FetchLogout } from '../../api/users';
+import { useEffect } from 'react';
 
 export const Route = createLazyFileRoute('/logout/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  // TODO: api call
+  useEffect(() => {
+    mutation.mutate();
+    return () => {
+    }
+  }, []);
 
-  localStorage.removeItem(local_storage_user_id);
-
-  // temp shit
-  const navigate = useNavigate()
-
-  navigate({
-    to: "/login",
-  })
+  const mutation = useMutation({
+    mutationFn: FetchLogout,
+    onSuccess() { },
+    onError() { },
+  });
 
   return (
-    <div>Hello "/logout/"!</div>
+    <Navigate to="/login" />
   );
 }
