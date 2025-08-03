@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState, type MouseEvent } from 'react';
 import { FetchAnimeById } from '../../../api/anime';
@@ -11,8 +11,8 @@ export const Route = createLazyFileRoute('/contents/anime/$animeId')({
 
 function ContentAnime() {
   const { animeId } = Route.useParams();
-
-  const [relUserLibraryAnime, setRelUserLibraryAnime] = useState<RelAnimeUserLibrary | null>(null);
+  const [has_progress, setHasProgress] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["contents", "anime", animeId],
@@ -23,7 +23,7 @@ function ContentAnime() {
   });
 
   const { } = useQuery({
-    queryKey: ["user_library", "anime", "progress", animeId],
+    queryKey: ["contents", "anime", "progress", animeId],
     queryFn: async () => {
       const resp = await FetchGetProgress({
         progress_id: "",
@@ -32,7 +32,7 @@ function ContentAnime() {
       });
 
       if (resp.progress.length > 0) {
-        setRelUserLibraryAnime(resp.progress[0]);
+        setHasProgress(true);
       }
 
       return resp;
@@ -41,16 +41,21 @@ function ContentAnime() {
 
   const mutationAddToUserLibrary = useMutation({
     mutationFn: FetchAddAnimeToLibrary,
-    onSuccess(data) {
-      setRelUserLibraryAnime(data.progress);
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["contents", "anime", "progress", animeId],
+      });
     },
     onError(error) {
+      queryClient.invalidateQueries({
+        queryKey: ["contents", "anime", "progress", animeId],
+      });
       console.log(`${error.name}, ${error.message}`);
     },
   });
 
-  function handleAddToLibraryBtnOnClick(event: MouseEvent) {
-    if (relUserLibraryAnime) {
+  function handleAddToLibraryBtnOnClick(_: MouseEvent) {
+    if (has_progress) {
       return;
     }
 
@@ -86,7 +91,7 @@ function ContentAnime() {
       </div>
 
       <div>
-        <Button text={relUserLibraryAnime ? "In Library" : "Add To Library"} onClick={handleAddToLibraryBtnOnClick} disabled={relUserLibraryAnime ? true : false} />
+        <Button text={has_progress ? "In Library" : "Add To Library"} onClick={handleAddToLibraryBtnOnClick} disabled={has_progress ? true : false} />
       </div>
 
       <div className={`flex flex-col flex-nowrap gap-1.5`}>

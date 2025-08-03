@@ -22,7 +22,7 @@ export const Route = createFileRoute('/library/notstarted/')({
       return null;
     }
   },
-})
+});
 
 function LibNotStartedIndex() {
   const user = Route.useLoaderData();
@@ -47,6 +47,7 @@ function LibNotStartedIndex() {
       queryClient.invalidateQueries();
     },
     onError(error) {
+      queryClient.invalidateQueries();
       console.log(error);
     },
   });
@@ -57,18 +58,19 @@ function LibNotStartedIndex() {
       queryClient.invalidateQueries();
     },
     onError(error) {
+      queryClient.invalidateQueries();
       console.log(error);
     },
   });
 
-  function handleStartAnime(event: MouseEvent, params: SetStatusRequest) {
+  function handleStartAnime(_: MouseEvent, params: SetStatusRequest) {
     mutationStartAnime.mutate({
       progress_id: params.progress_id,
       status: params.status,
     });
   }
 
-  function handleRemoveProgress(event: MouseEvent, params: RemoveProgressRequest) {
+  function handleRemoveProgress(_: MouseEvent, params: RemoveProgressRequest) {
     mutationRemoveProgress.mutate({
       progress_id: params.progress_id,
     });

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { FetchGetProgress, FetchSetProgress } from '../../../../api/library';
 import Input from '../../../../ui/Input';
@@ -12,6 +12,7 @@ export const Route = createLazyFileRoute('/library/started/detail/$progressId')(
 function RouteComponent() {
   const { progressId } = Route.useParams();
   const [episode_val, setEpisodeVal] = useState<number>(0);
+  const queryClient = useQueryClient();
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["library", "started", "detail", progressId],
@@ -54,10 +55,11 @@ function RouteComponent() {
 
   const mutationUpdateProgress = useMutation({
     mutationFn: FetchSetProgress,
-    onSuccess(data) {
-      setEpisodeVal(data.progress.episode);
+    onSuccess() {
+      queryClient.invalidateQueries();
     },
     onError(error) {
+      queryClient.invalidateQueries();
       console.log(error);
     },
   });

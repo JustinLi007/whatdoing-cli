@@ -75,7 +75,7 @@ export async function FetchGetProgress(params: GetProgressRequest): Promise<Prog
   }
 }
 
-export async function FetchSetProgress(params: SetProgressRequest): Promise<ProgressResponse> {
+export async function FetchSetProgress(params: SetProgressRequest): Promise<EmptyResponse> {
   const result = SetProgressSchema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);
@@ -104,7 +104,7 @@ export async function FetchSetProgress(params: SetProgressRequest): Promise<Prog
   }
 }
 
-export async function FetchSetStatus(params: SetStatusRequest): Promise<ProgressResponse> {
+export async function FetchSetStatus(params: SetStatusRequest): Promise<EmptyResponse> {
   const result = SetStatusSchema.safeParse(params);
   if (!result.success) {
     throw new Error(`invalid params`);
