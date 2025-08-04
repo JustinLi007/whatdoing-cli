@@ -17,13 +17,18 @@ const UpdateAnimeSchema = z.object({
   alternative_names: z.string().array(),
 });
 
-
 const CreateAnimeSchema = z.object({
   content_type: content_types,
   name: z.string().min(1),
   episodes: z.number().gt(0, "episodes cannot be less than 0"),
   image_url: z.string().url("image url must be a valid url"),
   description: z.string(),
+});
+
+const GetAllAnimeSchema = z.object({
+  search: z.string(),
+  sort: z.enum(["asc", "desc"]),
+  ignore: z.enum(["", "library"]),
 });
 
 export async function FetchCreateAnime(params: CreateAnimeRequest): Promise<AnimeResponse> {
@@ -76,8 +81,13 @@ export async function FetchAnimeById(params: GetAnimeRequest): Promise<AnimeResp
   }
 }
 
-export async function FetchAllAnime(): Promise<AnimeArrayResponse> {
-  const url = `${base_url}/contents/anime`;
+export async function FetchAllAnime(params: AllAnimeRequest): Promise<AnimeArrayResponse> {
+  const result = GetAllAnimeSchema.safeParse(params);
+  if (!result.success) {
+    throw new Error(`invalid params`);
+  }
+
+  const url = `${base_url}/contents/anime?search=${params.search}&sort=${params.sort}&ignore=${params.ignore}`;
 
   try {
     const resp = await fetch(url, { credentials: "include" });

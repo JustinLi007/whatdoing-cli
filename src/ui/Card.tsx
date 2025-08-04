@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 type Parameters = {
   title?: string | null;
   episode?: number | string | readonly string[] | null;
@@ -30,10 +32,10 @@ export default function Card(params: Parameters) {
             <div>
               <div className={`sticky left-0 top-0 bg-neutral-800 p-2`}>
                 <div className={`font-bold`}>
-                  <a
-                    href={contentLink}
+                  <Link
+                    to={contentLink}
                     className={`text-lg ${contentLink.trim() === "" ? "pointer-events-none" : ""}`}
-                  >{title}</a>
+                  >{title}</Link>
                 </div>
                 <div>{episode}</div>
               </div>

@@ -3,6 +3,9 @@
 type SortCompare<T> = (base: T, other: T) => -1 | 0 | 1;
 type CompareFn<T, U> = (base: T, other: U) => boolean;
 
+type SortOptions = "asc" | "desc";
+type IgnoreOptions = "" | "library";
+
 type MenuItem = {
   id: string;
   name: string;

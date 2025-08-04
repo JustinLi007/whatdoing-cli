@@ -23,6 +23,12 @@ type GetAnimeRequest = {
   anime_id: string;
 }
 
+type AllAnimeRequest = {
+  search: string;
+  sort: SortOptions;
+  ignore: IgnoreOptions;
+}
+
 type UpdateAnimeRequest = {
   content_id: string;
   content_names_id: string;
