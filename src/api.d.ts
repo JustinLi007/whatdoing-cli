@@ -44,9 +44,9 @@ type AddAnimeToLibraryRequest = {
 }
 
 type GetProgressRequest = {
-  progress_id: string;
-  anime_id: string;
-  status: string;
+  progress_id?: string;
+  anime_id?: string;
+  status?: StatusOptions;
 }
 
 type SetProgressRequest = {
@@ -56,7 +56,7 @@ type SetProgressRequest = {
 
 type SetStatusRequest = {
   progress_id: string;
-  status: string;
+  status: StatusOptions;
 }
 
 type RemoveProgressRequest = {

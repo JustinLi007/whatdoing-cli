@@ -6,9 +6,9 @@ const AddAnimeToLibrarySchema = z.object({
 });
 
 const GetProgressSchema = z.object({
-  progress_id: z.string(),
-  anime_id: z.string(),
-  status: z.string(),
+  progress_id: z.string().optional(),
+  anime_id: z.string().optional(),
+  status: z.string().optional(),
 });
 
 const SetProgressSchema = z.object({

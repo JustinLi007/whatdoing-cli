@@ -13,7 +13,7 @@ export default function Menu(params: Paramaters) {
     <div
       id={params.id}
       className={`relative flex flex-col flex-nowrap gap-2 p-3 ${params.hidden ? "hidden" : ""} h-full`}>
-      <Option text="Library" to="/library/started" onClick={params.onClick} />
+      <Option text="Library" to="/library" onClick={params.onClick} />
       <Option text="Search" to="/search" onClick={params.onClick} />
       <Option text="Data" to="/data" onClick={params.onClick} />
       {params.login ?

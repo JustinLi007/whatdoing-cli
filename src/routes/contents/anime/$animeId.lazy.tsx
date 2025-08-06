@@ -26,9 +26,7 @@ function ContentAnime() {
     queryKey: ["contents", "anime", "progress", animeId],
     queryFn: async () => {
       const resp = await FetchGetProgress({
-        progress_id: "",
         anime_id: animeId,
-        status: "",
       });
 
       if (resp.progress.length > 0) {

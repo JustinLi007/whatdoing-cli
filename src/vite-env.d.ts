@@ -5,6 +5,7 @@ type CompareFn<T, U> = (base: T, other: U) => boolean;
 
 type SortOptions = "asc" | "desc";
 type IgnoreOptions = "" | "library";
+type StatusOptions = "started" | "not-started" | "completed";
 
 type MenuItem = {
   id: string;
