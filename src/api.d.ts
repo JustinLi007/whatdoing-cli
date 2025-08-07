@@ -11,12 +11,10 @@ type UserRequest = {
 }
 
 type CreateAnimeRequest = {
-  content_type: string;
   name: string;
-  content_id?: string;
-  episodes?: number;
-  description?: string;
-  image_url?: string;
+  episodes: number;
+  description: string;
+  image_url: string;
 }
 
 type GetAnimeRequest = {
@@ -52,11 +50,6 @@ type GetProgressRequest = {
 type SetProgressRequest = {
   progress_id: string;
   episode: number;
-}
-
-type SetStatusRequest = {
-  progress_id: string;
-  status: StatusOptions;
 }
 
 type RemoveProgressRequest = {

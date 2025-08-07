@@ -3,7 +3,7 @@ import { createFileRoute, Link, Navigate } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod'
 import { fallback, zodValidator } from '@tanstack/zod-adapter'
-import { FetchGetProgress, FetchRemoveProgress, FetchSetStatus } from '../../api/library';
+import { FetchGetProgress, FetchRemoveProgress, FetchSetProgress } from '../../api/library';
 import { FetchCheckSession } from '../../api/users';
 import Button from '../../ui/Button';
 
@@ -39,8 +39,8 @@ function LibraryIndex() {
     }
   });
 
-  const mutationStartAnime = useMutation({
-    mutationFn: FetchSetStatus,
+  const mutationSetProgress = useMutation({
+    mutationFn: FetchSetProgress,
     onSuccess() {
       queryClient.invalidateQueries();
     },
@@ -61,10 +61,17 @@ function LibraryIndex() {
     },
   });
 
-  function handleStartAnime(_: MouseEvent, params: SetStatusRequest) {
-    mutationStartAnime.mutate({
+  function handleStartAnime(_: MouseEvent, params: SetProgressRequest) {
+    mutationSetProgress.mutate({
       progress_id: params.progress_id,
-      status: params.status,
+      episode: 1,
+    });
+  }
+
+  function handleResetProgress(_: MouseEvent, params: SetProgressRequest) {
+    mutationSetProgress.mutate({
+      progress_id: params.progress_id,
+      episode: 0,
     });
   }
 
@@ -128,20 +135,21 @@ function LibraryIndex() {
                     status === "not-started" ?
                       <div className="flex flex-col flex-nowrap gap-1.5">
                         <Button text="Start" onClick={(e) => {
-                          handleStartAnime(e, {
-                            progress_id: value.id,
-                            status: "started",
-                          });
+                          handleStartAnime(e, { progress_id: value.id, episode: 1 });
                         }} />
                         <Button text="Remove" onClick={(e) => {
-                          handleRemoveProgress(e, {
-                            progress_id: value.id,
-                          });
+                          handleRemoveProgress(e, { progress_id: value.id });
                         }} />
                       </div>
                       :
-                      <div>
-                        completed, nothing yet
+                      <div className="flex flex-col flex-nowrap gap-1.5">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            handleResetProgress(e, { progress_id: value.id, episode: 0 });
+                          }}
+                          className="border-1 border-gray-500 p-3 w-full"
+                        >Reset</button>
                       </div>
                   }
                 </div>

@@ -13,12 +13,7 @@ const GetProgressSchema = z.object({
 
 const SetProgressSchema = z.object({
   progress_id: z.string(),
-  episode: z.number().min(1),
-});
-
-const SetStatusSchema = z.object({
-  progress_id: z.string(),
-  status: z.string(),
+  episode: z.number().min(0),
 });
 
 const DeleteProgressSchema = z.object({
@@ -81,36 +76,7 @@ export async function FetchSetProgress(params: SetProgressRequest): Promise<Empt
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/library/anime/progress`;
-  const payload: RequestInit = {
-    method: "PUT",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(params),
-  }
-
-  try {
-    const resp = await fetch(url, payload);
-    if (!resp.ok) {
-      throw new Error(`failed with code ${resp.status}, ${resp.statusText}.`);
-    }
-
-    const json_data = await resp.json();
-    return json_data;
-  } catch (err) {
-    throw err;
-  }
-}
-
-export async function FetchSetStatus(params: SetStatusRequest): Promise<EmptyResponse> {
-  const result = SetStatusSchema.safeParse(params);
-  if (!result.success) {
-    throw new Error(`invalid params`);
-  }
-
-  const url = `${base_url}/library/anime/status`;
+  const url = `${base_url}/progress/anime`;
   const payload: RequestInit = {
     method: "PUT",
     credentials: "include",
