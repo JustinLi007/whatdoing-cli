@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type KeyboardEvent, type MouseEvent } from 'react';
 import { createFileRoute, Link, Navigate } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod'
@@ -6,10 +6,16 @@ import { fallback, zodValidator } from '@tanstack/zod-adapter'
 import { FetchGetProgress, FetchRemoveProgress, FetchSetProgress } from '../../api/library';
 import { FetchCheckSession } from '../../api/users';
 import Button from '../../ui/Button';
+import debounce from '../../utils/debounce';
+import { newDocClickHandler } from '../../utils/ui';
 
 const librarySearchSchema = z.object({
   status: fallback(z.enum(["started", "not-started", "completed"]), "started").default("started"),
+  search: fallback(z.string(), "").default(""),
+  sort: fallback(z.enum(["asc", "desc"]), "asc").default("asc"),
 });
+
+const performSearch = debounce(500);
 
 export const Route = createFileRoute('/library/')({
   component: LibraryIndex,
@@ -22,22 +28,94 @@ export const Route = createFileRoute('/library/')({
       return null;
     }
   },
-})
+});
 
 function LibraryIndex() {
   const user = Route.useLoaderData();
-  const { status } = Route.useSearch();
+  const { status, search, sort } = Route.useSearch();
+
   const queryClient = useQueryClient();
+  const navigate = Route.useNavigate();
+
+  const [search_value, setSearchValue] = useState<string>(search);
+  const [sort_value, setSortValue] = useState<SortOptions>(sort);
+  const [sort_hidden, setSortHidden] = useState<boolean>(true);
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ["library", user, status],
+    queryKey: ["library", user, status, sort_value],
     queryFn: async () => {
       const resp = await FetchGetProgress({
         status: status,
+        search: search_value,
+        sort: sort_value,
       });
       return resp;
     }
   });
+
+  const toggleSortDropdown = newDocClickHandler("library-sort-dropdown", setSortHidden);
+
+  useEffect(() => {
+    document.addEventListener("click", toggleSortDropdown);
+    return () => {
+      document.removeEventListener("click", toggleSortDropdown);
+    }
+  }, []);
+
+  useEffect(() => {
+    setSearchValue(search);
+    setSortValue(sort);
+  }, [search, sort]);
+
+  function handleSearchOnChange(event: ChangeEvent) {
+    const t = event.target;
+    if (!(t instanceof HTMLInputElement)) {
+      return;
+    }
+    const val = t.value;
+    setSearchValue(val);
+
+    performSearch(() => {
+      navigate({
+        search: {
+          status: status,
+          search: val,
+          sort: sort_value,
+        }
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["library", user, status, sort_value],
+      });
+    });
+  }
+
+  function handleSearchOnKeyDown(event: KeyboardEvent) {
+    const key = event.key;
+    if (key === "Enter") {
+      navigate({
+        search: {
+          status: status,
+          search: search_value,
+          sort: sort_value,
+        }
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["library", user, status, sort_value],
+      });
+    }
+  }
+
+  function handleSortOnClick(_: MouseEvent, sort_value: SortOptions) {
+    setSortValue(sort_value);
+    setSortHidden(true);
+    navigate({
+      search: {
+        status: status,
+        search: search_value,
+        sort: sort_value,
+      }
+    });
+  }
 
   const mutationSetProgress = useMutation({
     mutationFn: FetchSetProgress,
@@ -102,7 +180,34 @@ function LibraryIndex() {
       <header className={`shrink-0`}>
       </header>
 
-      <main className={`flex-[1_1_auto] overflow-y-auto`}>
+      <main className="flex-[1_1_auto] overflow-y-auto p-4 flex flex-col flex-nowrap gap-1.5">
+        <div className="flex flex-col flex-nowrap gap-1.5">
+          <div className="border-gray-500 border">
+            <input
+              type="text"
+              value={search_value}
+              placeholder="search"
+              onChange={(e) => { handleSearchOnChange(e); }}
+              onKeyDown={(e) => { handleSearchOnKeyDown(e); }}
+              className="py-1 px-3 outline-0 w-full"
+            />
+          </div>
+          <div className="flex flex-row flex-nowrap justify-end gap-1.5">
+            <div>
+              <div id="library-sort-dropdown" className="relative inline-block w-full">
+                <button
+                  type="button"
+                  onClick={() => { setSortHidden(!sort_hidden); }}
+                  className={`border-1 border-gray-500 py-1 px-3`}
+                >Sort: {sort}</button>
+                <div className={`absolute left-0 right-0 bg-gray-700 z-10 ${sort_hidden ? "hidden" : ""}`}>
+                  <div onClick={(e) => { handleSortOnClick(e, "asc"); }} className="hover:bg-gray-500">Asc</div>
+                  <div onClick={(e) => { handleSortOnClick(e, "desc"); }} className="hover:bg-gray-500">Desc</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="grid grid-flow-row gap-1.5 p-1.5 border border-gray-500">
           <div className="grid grid-cols-5 text-center items-center wrap-break-word font-bold">
             <div className="col-span-2">Title</div>
@@ -120,7 +225,7 @@ function LibraryIndex() {
                     {value.anime.anime_name.name}
                   </Link>
                 </div>
-                <div>{value.status}</div>
+                <div>{status}</div>
                 <div>{value.episode}</div>
                 <div key={value.id} className="flex-1 text-center">
                   {status === "started" ?

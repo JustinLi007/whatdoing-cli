@@ -45,6 +45,8 @@ type GetProgressRequest = {
   progress_id?: string;
   anime_id?: string;
   status?: StatusOptions;
+  search?: string;
+  sort?: string;
 }
 
 type SetProgressRequest = {

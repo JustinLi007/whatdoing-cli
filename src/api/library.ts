@@ -9,6 +9,8 @@ const GetProgressSchema = z.object({
   progress_id: z.string().optional(),
   anime_id: z.string().optional(),
   status: z.string().optional(),
+  search: z.string().optional(),
+  sort: z.enum(["asc", "desc"]).optional(),
 });
 
 const SetProgressSchema = z.object({
@@ -55,7 +57,7 @@ export async function FetchGetProgress(params: GetProgressRequest): Promise<Prog
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/library/anime/progress?progress_id=${params.progress_id}&anime_id=${params.anime_id}&status=${params.status}`;
+  const url = `${base_url}/library/anime/progress?progress_id=${params.progress_id}&anime_id=${params.anime_id}&status=${params.status}&search=${params.search}&sort=${params.sort}`;
 
   try {
     const resp = await fetch(url, { credentials: "include" });

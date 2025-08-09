@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState, type ChangeEvent, type MouseEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type KeyboardEvent, type MouseEvent } from 'react';
 import { z } from 'zod'
 import { fallback, zodValidator } from '@tanstack/zod-adapter';
 import { FetchAllAnime } from '../../../api/anime';
-import Search from '../../../ui/Search';
 import Card from '../../../ui/Card';
 import { newDocClickHandler } from '../../../utils/ui';
 import debounce from '../../../utils/debounce';
@@ -57,6 +56,12 @@ function SearchAnime() {
     }
   }, []);
 
+  useEffect(() => {
+    setSearchValue(search);
+    setSortValue(sort);
+    setIgnoreValue(ignore);
+  }, [search, sort, ignore]);
+
   function handleSearchOnChange(event: ChangeEvent) {
     const t = event.target;
     if (!(t instanceof HTMLInputElement)) {
@@ -77,6 +82,22 @@ function SearchAnime() {
         queryKey: ["search", "anime", sort_value, ignore_value],
       });
     });
+  }
+
+  function handleSearchOnKeyDown(event: KeyboardEvent) {
+    const key = event.key;
+    if (key === "Enter") {
+      navigate({
+        search: {
+          search: search_value,
+          sort: sort_value,
+          ignore: ignore,
+        }
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["search", "anime", sort_value, ignore_value],
+      });
+    }
   }
 
   function handleSortOnClick(_: MouseEvent, sort_value: SortOptions) {
@@ -117,7 +138,14 @@ function SearchAnime() {
   return (
     <div className="flex flex-col flex-nowrap p-4 gap-4">
       <div className="border-gray-500 border">
-        <Search searchValue={search_value} onChange={handleSearchOnChange} />
+        <input
+          type="text"
+          value={search_value}
+          placeholder="search"
+          onChange={(e) => { handleSearchOnChange(e); }}
+          onKeyDown={(e) => { handleSearchOnKeyDown(e); }}
+          className="py-1 px-3 outline-0 w-full"
+        />
       </div>
       <div className="flex flex-row flex-nowrap justify-end gap-1.5">
         <div>
@@ -126,7 +154,7 @@ function SearchAnime() {
               type="button"
               onClick={() => { setSortHidden(!sort_hidden); }}
               className={`border-1 border-gray-500 py-1 px-3`}
-            >Sort: {sort_value}</button>
+            >Sort: {sort}</button>
             <div className={`absolute left-0 right-0 bg-gray-700 z-10 ${sort_hidden ? "hidden" : ""}`}>
               <div onClick={(e) => { handleSortOnClick(e, "asc"); }} className="hover:bg-gray-500">Asc</div>
               <div onClick={(e) => { handleSortOnClick(e, "desc"); }} className="hover:bg-gray-500">Desc</div>
@@ -139,7 +167,7 @@ function SearchAnime() {
               type="button"
               onClick={() => { setIgnoreHidden(!ignore_hidden); }}
               className={`border-1 border-gray-500 py-1 px-3`}
-            >Ignore{ignore_value === "" ? "" : ": " + ignore_value}</button>
+            >Ignore{ignore === "" ? "" : ": " + ignore}</button>
             <div className={`absolute left-0 right-0 bg-gray-700 z-10 ${ignore_hidden ? "hidden" : ""}`}>
               <div onClick={(e) => { handleIgnoreOnClick(e, ""); }} className="hover:bg-gray-500">None</div>
               <div onClick={(e) => { handleIgnoreOnClick(e, "library"); }} className="hover:bg-gray-500">In Library</div>

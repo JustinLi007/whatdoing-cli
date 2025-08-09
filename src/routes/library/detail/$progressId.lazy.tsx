@@ -7,7 +7,7 @@ import Button from '../../../ui/Button';
 
 export const Route = createLazyFileRoute('/library/detail/$progressId')({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const { progressId } = Route.useParams();
