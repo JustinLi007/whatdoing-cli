@@ -17,6 +17,13 @@ const searchAnimeSchema = z.object({
 export const Route = createFileRoute('/search/anime/')({
   component: SearchAnime,
   validateSearch: zodValidator(searchAnimeSchema),
+  head: () => ({
+    meta: [
+      {
+        title: "Search - Anime",
+      }
+    ],
+  }),
 });
 
 const performSearch = debounce(500);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, createRootRoute } from "@tanstack/react-router"
+import { HeadContent, Outlet, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Menu from "../ui/Menu";
@@ -40,6 +40,7 @@ function RootComponent() {
 
   return (
     <>
+      <HeadContent />
       <div className={`flex flex-col h-dvh`}>
         <header id="root-menu" className={`shrink-0`}>
           <Header title="Whatdoing" onClick={handleMenuBtnOnClick} />

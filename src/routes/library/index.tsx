@@ -28,6 +28,13 @@ export const Route = createFileRoute('/library/')({
       return null;
     }
   },
+  head: () => ({
+    meta: [
+      {
+        title: "Library",
+      },
+    ],
+  }),
 });
 
 function LibraryIndex() {
