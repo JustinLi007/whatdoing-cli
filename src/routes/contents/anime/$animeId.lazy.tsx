@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState, type MouseEvent } from 'react';
 import { FetchAnimeById } from '../../../api/anime';
-import { FetchAddAnimeToLibrary, FetchGetProgress } from '../../../api/library';
+import { FetchAddAnimeToLibrary, FetchGetProgress } from '../../../api/progress_anime';
 import Button from '../../../ui/Button';
 
 export const Route = createLazyFileRoute('/contents/anime/$animeId')({

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { FetchGetProgress, FetchSetProgress } from '../../../api/library';
+import { FetchGetProgress, FetchSetProgress } from '../../../api/progress_anime';
 import Input from '../../../ui/Input';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import Button from '../../../ui/Button';

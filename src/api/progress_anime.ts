@@ -28,7 +28,7 @@ export async function FetchAddAnimeToLibrary(params: AddAnimeToLibraryRequest): 
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/library/anime`;
+  const url = `${base_url}/progress/anime`;
   const payload: RequestInit = {
     method: "POST",
     credentials: "include",
@@ -57,7 +57,7 @@ export async function FetchGetProgress(params: GetProgressRequest): Promise<Prog
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/library/anime/progress?progress_id=${params.progress_id}&anime_id=${params.anime_id}&status=${params.status}&search=${params.search}&sort=${params.sort}`;
+  const url = `${base_url}/progress/anime?progress_id=${params.progress_id}&anime_id=${params.anime_id}&status=${params.status}&search=${params.search}&sort=${params.sort}`;
 
   try {
     const resp = await fetch(url, { credentials: "include" });
@@ -107,7 +107,7 @@ export async function FetchRemoveProgress(params: RemoveProgressRequest): Promis
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/library/anime/progress`;
+  const url = `${base_url}/progress/anime`;
   const payload: RequestInit = {
     method: "DELETE",
     credentials: "include",

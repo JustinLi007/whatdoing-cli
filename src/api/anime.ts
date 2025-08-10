@@ -34,7 +34,7 @@ export async function FetchCreateAnime(params: CreateAnimeRequest): Promise<Anim
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/contents/anime`;
+  const url = `${base_url}/anime`;
   const payload: RequestInit = {
     method: "POST",
     credentials: "include",
@@ -63,7 +63,7 @@ export async function FetchAnimeById(params: GetAnimeRequest): Promise<AnimeResp
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/contents/anime/${params.anime_id}`;
+  const url = `${base_url}/anime/${params.anime_id}`;
 
   try {
     const resp = await fetch(url, { credentials: "include" });
@@ -84,7 +84,7 @@ export async function FetchAllAnime(params: AllAnimeRequest): Promise<AnimeArray
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/contents/anime?search=${params.search}&sort=${params.sort}&ignore=${params.ignore}`;
+  const url = `${base_url}/anime?search=${params.search}&sort=${params.sort}&ignore=${params.ignore}`;
 
   try {
     const resp = await fetch(url, { credentials: "include" });
@@ -105,7 +105,7 @@ export async function FetchUpdateAnime(params: UpdateAnimeRequest): Promise<Empt
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/contents/anime/${params.content_id}`;
+  const url = `${base_url}/anime/${params.content_id}`;
   const payload: RequestInit = {
     method: "PUT",
     credentials: "include",

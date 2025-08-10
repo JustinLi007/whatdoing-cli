@@ -3,7 +3,7 @@ import { createFileRoute, Link, Navigate } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod'
 import { fallback, zodValidator } from '@tanstack/zod-adapter'
-import { FetchGetProgress, FetchRemoveProgress, FetchSetProgress } from '../../api/library';
+import { FetchGetProgress, FetchRemoveProgress, FetchSetProgress } from '../../api/progress_anime.ts';
 import { FetchCheckSession } from '../../api/users';
 import Button from '../../ui/Button';
 import debounce from '../../utils/debounce';
