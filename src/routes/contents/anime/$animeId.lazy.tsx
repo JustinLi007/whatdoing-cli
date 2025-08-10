@@ -87,6 +87,10 @@ function ContentAnime() {
       </div>
       <div>
         <Button text={has_progress ? "In Library" : "Add To Library"} onClick={handleAddToLibraryBtnOnClick} disabled={has_progress ? true : false} />
+        {has_progress ?
+          <button>To Library</button>
+          : null
+        }
       </div>
       <div className="flex flex-col flex-nowrap gap-1.5">
         <div className="font-bold text-center">Information</div>
