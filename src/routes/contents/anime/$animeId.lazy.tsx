@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute, Link } from '@tanstack/react-router'
 import { useState, type MouseEvent } from 'react';
 import { FetchAnimeById } from '../../../api/anime';
 import { FetchAddAnimeToLibrary, FetchGetProgress } from '../../../api/progress_anime.ts';
-import Button from '../../../ui/Button';
 
 export const Route = createLazyFileRoute('/contents/anime/$animeId')({
   component: ContentAnime,
@@ -22,7 +21,7 @@ function ContentAnime() {
     },
   });
 
-  const { isPending: progressIsPending, isError: progressIsError, error: progressError } = useQuery({
+  const { isSuccess, data: progressData } = useQuery({
     queryKey: ["contents", "anime", "progress", animeId],
     queryFn: async () => {
       const resp = await FetchGetProgress({
@@ -74,16 +73,6 @@ function ContentAnime() {
       <div>something went wrong...{error.message}</div>
     );
   }
-  if (progressIsPending) {
-    return (
-      <div>Progress Pending...</div>
-    );
-  }
-  if (progressIsError) {
-    return (
-      <div>something went wrong...{progressError.message}</div>
-    );
-  }
 
   return (
     <div className="flex flex-col flex-nowrap gap-4 p-4">
@@ -97,13 +86,24 @@ function ContentAnime() {
         </div>
         <div className="inline-block h-48 overflow-y-auto">{data.anime.description}</div>
       </div>
-      <div>
-        <Button text={has_progress ? "In Library" : "Add To Library"} onClick={handleAddToLibraryBtnOnClick} disabled={has_progress ? true : false} />
-        {has_progress ?
-          <button>To Library</button>
-          : null
-        }
-      </div>
+      {isSuccess ?
+        <div>
+          {has_progress ?
+            <Link
+              to="/library/detail/$progressId"
+              params={{ progressId: progressData.progress[0].id }}
+              className="border border-gray-500 p-3 w-full inline-block text-center"
+            >To Library</Link>
+            :
+            <button
+              type="button"
+              onClick={(e) => { handleAddToLibraryBtnOnClick(e); }}
+              className="border border-gray-500 p-3 w-full active:bg-gray-500"
+            >Add To Library</button>
+          }
+        </div>
+        : null
+      }
       <div className="flex flex-col flex-nowrap gap-1.5">
         <div className="font-bold text-center">Information</div>
         <div>
