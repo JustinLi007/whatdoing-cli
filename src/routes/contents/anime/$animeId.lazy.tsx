@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState, type MouseEvent } from 'react';
 import { FetchAnimeById } from '../../../api/anime';
-import { FetchAddAnimeToLibrary, FetchGetProgress } from '../../../api/progress_anime';
+import { FetchAddAnimeToLibrary, FetchGetProgress } from '../../../api/progress_anime.ts';
 import Button from '../../../ui/Button';
 
 export const Route = createLazyFileRoute('/contents/anime/$animeId')({
@@ -22,11 +22,13 @@ function ContentAnime() {
     },
   });
 
-  const { } = useQuery({
+  const { isPending: progressIsPending, isError: progressIsError, error: progressError } = useQuery({
     queryKey: ["contents", "anime", "progress", animeId],
     queryFn: async () => {
       const resp = await FetchGetProgress({
         anime_id: animeId,
+        search: "",
+        progress_id: "",
       });
 
       if (resp.progress.length > 0) {
@@ -70,6 +72,16 @@ function ContentAnime() {
   if (isError) {
     return (
       <div>something went wrong...{error.message}</div>
+    );
+  }
+  if (progressIsPending) {
+    return (
+      <div>Progress Pending...</div>
+    );
+  }
+  if (progressIsError) {
+    return (
+      <div>something went wrong...{progressError.message}</div>
     );
   }
 

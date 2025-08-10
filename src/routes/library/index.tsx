@@ -55,6 +55,8 @@ function LibraryIndex() {
         status: status,
         search: search_value,
         sort: sort_value,
+        anime_id: "",
+        progress_id: "",
       });
       return resp;
     }

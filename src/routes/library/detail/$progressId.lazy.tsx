@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { FetchGetProgress, FetchSetProgress } from '../../../api/progress_anime';
+import { FetchGetProgress, FetchSetProgress } from '../../../api/progress_anime.ts';
 import Input from '../../../ui/Input';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import Button from '../../../ui/Button';
@@ -19,6 +19,8 @@ function RouteComponent() {
     queryFn: async () => {
       const resp = await FetchGetProgress({
         progress_id: progressId,
+        anime_id: "",
+        search: "",
       });
 
       if (resp.progress.length > 0) {

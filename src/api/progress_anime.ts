@@ -57,8 +57,10 @@ export async function FetchGetProgress(params: GetProgressRequest): Promise<Prog
     throw new Error(`invalid params`);
   }
 
-  // FIX: "" if null or undefined.
-  const url = `${base_url}/progress/anime?progress_id=${params.progress_id}&anime_id=${params.anime_id}&status=${params.status}&search=${params.search}&sort=${params.sort}`;
+  const progress_id = params.progress_id ?? "";
+  const anime_id = params.anime_id ?? "";
+  const search = params.search ?? "";
+  const url = `${base_url}/progress/anime?progress_id=${progress_id}&anime_id=${anime_id}&status=${params.status}&search=${search}&sort=${params.sort}`;
 
   try {
     const resp = await fetch(url, { credentials: "include" });
