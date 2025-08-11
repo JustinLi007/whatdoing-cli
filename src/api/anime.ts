@@ -6,13 +6,15 @@ const GetContentSchema = z.object({
 });
 
 const UpdateAnimeSchema = z.object({
-  content_id: z.string(),
-  content_names_id: z.string(),
-  content_type: z.string().trim().min(1, "content type required"),
+  anime_id: z.string(),
+  anime_names_id: z.string(),
   episodes: z.number().gt(0, "episodes cannot be less than 0"),
   image_url: z.string().url("image url must be a valid url"),
   description: z.string(),
-  alternative_names: z.string().array(),
+});
+
+const DeleteAnimeSchema = z.object({
+  anime_id: z.string(),
 });
 
 const CreateAnimeSchema = z.object({
@@ -26,6 +28,16 @@ const GetAllAnimeSchema = z.object({
   search: z.string(),
   sort: z.enum(["asc", "desc"]),
   ignore: z.enum(["", "library"]),
+});
+
+const AddAnimeAltNameSchema = z.object({
+  anime_id: z.string(),
+  alternative_name: z.string(),
+});
+
+const DeleteAnimeAltNameSchema = z.object({
+  anime_id: z.string(),
+  anime_names_ids: z.string().array(),
 });
 
 export async function FetchCreateAnime(params: CreateAnimeRequest): Promise<AnimeResponse> {
@@ -105,9 +117,96 @@ export async function FetchUpdateAnime(params: UpdateAnimeRequest): Promise<Empt
     throw new Error(`invalid params`);
   }
 
-  const url = `${base_url}/anime/${params.content_id}`;
+  const url = `${base_url}/anime/${params.anime_id}`;
   const payload: RequestInit = {
     method: "PUT",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(params),
+  }
+
+  try {
+    const resp = await fetch(url, payload);
+    if (!resp.ok) {
+      throw new Error(`failed with code ${resp.status}, ${resp.statusText}.`);
+    }
+
+    const json_data = await resp.json();
+    return json_data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function FetchDeleteAnime(params: DeleteAnimeRequest): Promise<EmptyResponse> {
+  const result = DeleteAnimeSchema.safeParse(params);
+  if (!result.success) {
+    throw new Error(`invalid params`);
+  }
+
+  const url = `${base_url}/anime`;
+  const payload: RequestInit = {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(params),
+  }
+
+  try {
+    const resp = await fetch(url, payload);
+    if (!resp.ok) {
+      throw new Error(`failed with code ${resp.status}, ${resp.statusText}.`);
+    }
+
+    const json_data = await resp.json();
+    return json_data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function FetchAddAnimeAltName(params: AddAnimeAltNameRequest): Promise<EmptyResponse> {
+  const result = AddAnimeAltNameSchema.safeParse(params);
+  if (!result.success) {
+    throw new Error(`invalid params`);
+  }
+
+  const url = `${base_url}/altname/anime`;
+  const payload: RequestInit = {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(params),
+  }
+
+  try {
+    const resp = await fetch(url, payload);
+    if (!resp.ok) {
+      throw new Error(`failed with code ${resp.status}, ${resp.statusText}.`);
+    }
+
+    const json_data = await resp.json();
+    return json_data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function FetchDeleteAnimeAltNames(params: DeleteAnimeAltNamesRequest): Promise<EmptyResponse> {
+  const result = DeleteAnimeAltNameSchema.safeParse(params);
+  if (!result.success) {
+    throw new Error(`invalid params`);
+  }
+
+  const url = `${base_url}/altname/anime`;
+  const payload: RequestInit = {
+    method: "DELETE",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

@@ -28,13 +28,15 @@ type AllAnimeRequest = {
 }
 
 type UpdateAnimeRequest = {
-  content_id: string;
-  content_names_id: string;
-  content_type: string;
+  anime_id: string;
+  anime_names_id: string;
   description: string;
   image_url: string;
   episodes: number;
-  alternative_names: string[];
+}
+
+type DeleteAnimeRequest = {
+  anime_id: string;
 }
 
 type AddAnimeToLibraryRequest = {
@@ -56,6 +58,16 @@ type SetProgressRequest = {
 
 type RemoveProgressRequest = {
   progress_id: string;
+}
+
+type AddAnimeAltNameRequest = {
+  anime_id: string;
+  alternative_name: string;
+}
+
+type DeleteAnimeAltNamesRequest = {
+  anime_id: string;
+  anime_names_ids: string[];
 }
 
 type EmptyResponse = {}
