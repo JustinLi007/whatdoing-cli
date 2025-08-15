@@ -1,10 +1,16 @@
 type DebounceCallback = () => void;
 export default function debounce(delay: number) {
   let timer: number;
-  return (cb: DebounceCallback) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      cb();
-    }, delay);
+  return {
+    debouncedFn:
+      (cb: DebounceCallback) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          cb();
+        }, delay);
+      },
+    cancelFn: () => {
+      clearTimeout(timer);
+    }
   }
 }

@@ -1,11 +1,10 @@
-import { useEffect, useState, type ChangeEvent, type MouseEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type KeyboardEvent, type MouseEvent } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { fallback, zodValidator } from '@tanstack/zod-adapter';
 import { FetchAllAnime } from '../../../api/anime';
 import Card from '../../../ui/Card';
-import Search from '../../../ui/Search';
 import debounce from '../../../utils/debounce';
 import { newDocClickHandler } from '../../../utils/ui';
 
@@ -14,7 +13,7 @@ const dataAnimeSchema = z.object({
   sort: fallback(z.enum(["asc", "desc"]), "asc").default("asc"),
 });
 
-const performSearch = debounce(500);
+const { debouncedFn, cancelFn } = debounce(500);
 
 export const Route = createFileRoute('/data/anime/')({
   component: RouteComponent,
@@ -59,7 +58,7 @@ function RouteComponent() {
     const val = t.value;
     setSearchValue(val);
 
-    performSearch(() => {
+    debouncedFn(() => {
       navigate({
         search: {
           search: val,
@@ -70,6 +69,22 @@ function RouteComponent() {
         queryKey: ["data", "anime", sort_value],
       });
     });
+  }
+
+  function handleSearchOnKeyDown(event: KeyboardEvent) {
+    const key = event.key;
+    if (key === "Enter") {
+      cancelFn();
+      navigate({
+        search: {
+          search: search_value,
+          sort: sort_value,
+        }
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["data", "anime", sort_value],
+      });
+    }
   }
 
   function handleSortOnClick(_: MouseEvent, sort_value: SortOptions) {
@@ -97,7 +112,14 @@ function RouteComponent() {
   return (
     <div className="flex flex-col flex-nowrap p-4 gap-4">
       <div className="border-gray-500 border">
-        <Search searchValue={search_value} onChange={handleSearchOnChange} />
+        <input
+          type="text"
+          value={search_value}
+          placeholder="search"
+          onChange={(e) => { handleSearchOnChange(e); }}
+          onKeyDown={(e) => { handleSearchOnKeyDown(e); }}
+          className="py-1 px-3 outline-0 w-full"
+        />
       </div>
       <div className="flex flex-row flex-nowrap justify-end gap-1.5">
         <div>

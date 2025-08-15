@@ -15,7 +15,7 @@ const librarySearchSchema = z.object({
   sort: fallback(z.enum(["asc", "desc"]), "asc").default("asc"),
 });
 
-const performSearch = debounce(500);
+const { debouncedFn, cancelFn } = debounce(500);
 
 export const Route = createFileRoute('/library/')({
   component: LibraryIndex,
@@ -84,7 +84,7 @@ function LibraryIndex() {
     const val = t.value;
     setSearchValue(val);
 
-    performSearch(() => {
+    debouncedFn(() => {
       navigate({
         search: {
           status: status,
@@ -101,6 +101,7 @@ function LibraryIndex() {
   function handleSearchOnKeyDown(event: KeyboardEvent) {
     const key = event.key;
     if (key === "Enter") {
+      cancelFn();
       navigate({
         search: {
           status: status,

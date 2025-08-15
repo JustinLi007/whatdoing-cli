@@ -26,7 +26,7 @@ export const Route = createFileRoute('/search/anime/')({
   }),
 });
 
-const performSearch = debounce(500);
+const { debouncedFn, cancelFn } = debounce(500);
 
 function SearchAnime() {
   const { search, sort, ignore } = Route.useSearch();
@@ -77,7 +77,7 @@ function SearchAnime() {
     const val = t.value;
     setSearchValue(val);
 
-    performSearch(() => {
+    debouncedFn(() => {
       navigate({
         search: {
           search: val,
@@ -94,6 +94,7 @@ function SearchAnime() {
   function handleSearchOnKeyDown(event: KeyboardEvent) {
     const key = event.key;
     if (key === "Enter") {
+      cancelFn();
       navigate({
         search: {
           search: search_value,
